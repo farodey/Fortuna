@@ -17,6 +17,9 @@
     <ClInclude Include="OpenHoldemFunctions.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="user.cpp">
@@ -25,5 +28,11 @@
     <ClCompile Include="OpenHoldemFunctions.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="user.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Fortuna\Fortuna.ico" />
   </ItemGroup>
 </Project>

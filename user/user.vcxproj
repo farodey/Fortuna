@@ -147,11 +147,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OpenHoldemFunctions.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenHoldemFunctions.cpp" />
     <ClCompile Include="user.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="user.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Fortuna\Fortuna.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
