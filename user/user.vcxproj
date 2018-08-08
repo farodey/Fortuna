@@ -148,12 +148,12 @@
   <ItemGroup>
     <ClInclude Include="OpenHoldemFunctions.h" />
     <ClInclude Include="Preflop.h" />
-    <ClInclude Include="Render.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="OpenHoldemFunctions.cpp" />
     <ClCompile Include="Preflop.cpp" />
     <ClCompile Include="user.cpp" />

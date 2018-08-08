@@ -1,3 +1,7 @@
+#include <Windows.h>
+#include <mutex>
+#include "Window.h"
+#include "OpenHoldemFunctions.h"
 #include "Preflop.h"
 
 // Сдвиг вправо по кругу
@@ -30,12 +34,12 @@ int RightCalls()
 
 void Preflop()
 {
+	mutex.lock();
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
 	{
-		hand = ;
 		if (GetSymbol("InMiddlePosition2"))
 		{
-			position = ;
+			// position = ;
 			if (GetSymbol("list_MP2_OR"))
 			{
 
@@ -90,6 +94,7 @@ void Preflop()
 			}
 		}
 	}
+	mutex.unlock();
 }
 
 

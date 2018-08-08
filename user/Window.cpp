@@ -1,7 +1,16 @@
 #include <Windows.h>
-#include "Render.h"
+#include <mutex>
+#include "resource.h"
+#include "Window.h"
 
-DWORD WINAPI RenderThread(LPVOID param)
+void Window(HANDLE hModule)
+{
+	HANDLE hThread;
+	DWORD idThread;
+	hThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)WindowThread, &hModule, NULL, &idThread);
+}
+
+DWORD WINAPI WindowThread(LPVOID param)
 {
 	HINSTANCE hInstance = *(HINSTANCE *)param;
 
@@ -9,7 +18,7 @@ DWORD WINAPI RenderThread(LPVOID param)
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
+	wcex.lpfnWndProc = WindowCallback;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
@@ -39,7 +48,7 @@ DWORD WINAPI RenderThread(LPVOID param)
 	return 0;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
@@ -76,48 +85,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void Paint(HDC hdc)
+void InitCharComb(char* char_comb[])
 {
-	// Цвета
-	COLORREF color1 = RGB(54, 31, 184);		// Темно-синий
-	COLORREF color2 = RGB(128, 128, 192);	// Светло-синий
-	COLORREF color3 = RGB(54, 196, 33);		// Зеленый
-	COLORREF color4 = RGB(240, 10, 10);		// Красный
-	COLORREF color5 = RGB(240, 240, 10);	// Оранжевый
-
-											// Кисти
-	HBRUSH hbr[5];
-	hbr[0] = CreateSolidBrush(color1);
-	hbr[1] = CreateSolidBrush(color2);
-	hbr[2] = CreateSolidBrush(color3);
-	hbr[3] = CreateSolidBrush(color4);
-	hbr[4] = CreateSolidBrush(color5);
-
-	// Шрифт
-	LOGFONT font;
-	font.lfHeight = 10;						// Устанавливает высоту шрифта или символа
-	font.lfWidth = 0;						// Устанавливает среднюю ширину символов в шрифте
-	font.lfEscapement = 0;					// Устанавливает угол, между вектором наклона и осью X устройства
-	font.lfOrientation = 0;					// Устанавливает угол, между основной линией каждого символа и осью X устройства
-	font.lfWeight = 100;					// Устанавливает толщину шрифта в диапазоне от 0 до 1000
-	font.lfItalic = 0;						// Устанавливает курсивный шрифт
-	font.lfUnderline = 0;					// Устанавливает подчеркнутый шрифт
-	font.lfStrikeOut = 0;					// Устанавливает зачеркнутый шрифт
-	font.lfCharSet = RUSSIAN_CHARSET;		// Устанавливает набор символов
-	font.lfOutPrecision = 0;				// Устанавливает точность вывода
-	font.lfClipPrecision = 0;				// Устанавливает точность отсечения
-	font.lfQuality = 0;						// Устанавливает качество вывода
-	font.lfPitchAndFamily = 0;				// Устанавливает ширину символов и семейство шрифта
-	strcpy_s(font.lfFaceName, "VERDANA");	// Устанавливает название шрифта
-	HFONT hFont = CreateFontIndirect(&font);
-
-	RECT rect;
-	//COLORREF oldColorFont = SetTextColor(hdc, colorFont);
-	SetBkMode(hdc, TRANSPARENT); // Прозрачный фон шрифта
-
-								 // Матрица всего диапазона
-	char* char_comb[169];
-
 	// 1
 	char_comb[0] = "AA";
 	char_comb[1] = "AKs";
@@ -312,39 +281,89 @@ void Paint(HDC hdc)
 	char_comb[166] = "42o";
 	char_comb[167] = "32o";
 	char_comb[168] = "22";
+}
 
-	if (identified)
+void Paint(HDC hdc)
+{
+	// Цвета
+	COLORREF color1 = RGB(54, 31, 184);		// Темно-синий
+	COLORREF color2 = RGB(128, 128, 192);	// Светло-синий
+	COLORREF color3 = RGB(54, 196, 33);		// Зеленый
+	COLORREF color4 = RGB(240, 10, 10);		// Красный
+	COLORREF color5 = RGB(240, 240, 10);	// Оранжевый
+
+	// Кисти
+	HBRUSH hbr[5];
+	hbr[0] = CreateSolidBrush(color1);
+	hbr[1] = CreateSolidBrush(color2);
+	hbr[2] = CreateSolidBrush(color3);
+	hbr[3] = CreateSolidBrush(color4);
+	hbr[4] = CreateSolidBrush(color5);
+
+	// Шрифт
+	LOGFONT font;
+	font.lfHeight = 10;						// Устанавливает высоту шрифта или символа
+	font.lfWidth = 0;						// Устанавливает среднюю ширину символов в шрифте
+	font.lfEscapement = 0;					// Устанавливает угол, между вектором наклона и осью X устройства
+	font.lfOrientation = 0;					// Устанавливает угол, между основной линией каждого символа и осью X устройства
+	font.lfWeight = 100;					// Устанавливает толщину шрифта в диапазоне от 0 до 1000
+	font.lfItalic = 0;						// Устанавливает курсивный шрифт
+	font.lfUnderline = 0;					// Устанавливает подчеркнутый шрифт
+	font.lfStrikeOut = 0;					// Устанавливает зачеркнутый шрифт
+	font.lfCharSet = RUSSIAN_CHARSET;		// Устанавливает набор символов
+	font.lfOutPrecision = 0;				// Устанавливает точность вывода
+	font.lfClipPrecision = 0;				// Устанавливает точность отсечения
+	font.lfQuality = 0;						// Устанавливает качество вывода
+	font.lfPitchAndFamily = 0;				// Устанавливает ширину символов и семейство шрифта
+	strcpy_s(font.lfFaceName, "VERDANA");	// Устанавливает название шрифта
+	HFONT hFont = CreateFontIndirect(&font);
+
+	RECT rect;
+	//COLORREF oldColorFont = SetTextColor(hdc, colorFont);
+	SetBkMode(hdc, TRANSPARENT); // Прозрачный фон шрифта
+
+	// Создаем и иннициализируем матрицу всего диапазона
+	char* char_comb[169];
+	InitCharComb(char_comb);
+
+	// Блокируем мьютекс для доступа к данным
+	mutex.lock();
+
+	if (cls)
 	{
-		// Диапазон
+		// Рисуем прямоугольник (очистка окна)
+		SetRect(&rect, 0, 0, 700, 600);
+		FillRect(hdc, &rect, hbr[2]);
+	}
+	else
+	{
+		// Рисуем диапазон
 		int index_comb = 0;		// Индекс комбинации в массиве
 		for (int y = 0; y < 13; y++)
 		{
 			for (int x = 0; x < 13; x++)
 			{
-				// Зарисовываем прямоугольник
-				SetRect(&rect, 250 + x * 20 + 1, 10 + y * 20 + 1, 270 + x * 20, 30 + y * 20);
+				// Зарисовываем прямоугольник (левая, верхняя, правая, нижняя)
+				SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
 				FillRect(hdc, &rect, hbr[index_comb]);
 
 				// Выводим название комбинации поверх прямоугольниука
 				SelectObject(hdc, hFont);
-				TextOut(hdc, 250 + x * 20 + 1, 10 + y * 20 + 1, char_comb[index_comb], lstrlen(char_comb[index_comb]));
+				TextOut(hdc, 10 + x * 20, 10 + y * 20, char_comb[index_comb], lstrlen(char_comb[index_comb]));
 				index_comb++;
 			}
 		}
 
 		// Действие
-		TextOut(hdc, 300, 300, action, lstrlen(action));
+		TextOut(hdc, 300, 300, text1, lstrlen(text1));
 
 		// Позиция
-		TextOut(hdc, 300, 350, position, lstrlen(position));
+		TextOut(hdc, 300, 350, text2, lstrlen(text2));
 
 		// Рука
-		TextOut(hdc, 300, 400, hand, lstrlen(hand));
+		TextOut(hdc, 300, 400, text3, lstrlen(text3));
 	}
-	else
-	{
-		// Зарисовываем прямоугольник
-		SetRect(&rect, 1, 2, 3, 4);
-		FillRect(hdc, &rect, hbr[2]);
-	}
+
+	// Разблокируем мьютекс
+	mutex.unlock();
 }
