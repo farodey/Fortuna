@@ -4,6 +4,82 @@
 #include "OpenHoldemFunctions.h"
 #include "Preflop.h"
 
+void Hand(char* returnBuffer)
+{
+	Rank(GetSymbol("$$pr0"), returnBuffer);
+	Suit(GetSymbol("$$ps0"), returnBuffer + 1);
+	Rank(GetSymbol("$$pr1"), returnBuffer + 2);
+	Suit(GetSymbol("$$ps1"), returnBuffer + 3);
+}
+
+void Rank(int rank, char* cRank)
+{
+	switch (rank)
+	{
+	case 14:
+		*cRank = 'A';
+		break;
+	case 13:
+		*cRank = 'K';
+		break;
+	case 12:
+		*cRank = 'Q';
+		break;
+	case 11:
+		*cRank = 'J';
+		break;
+	case 10:
+		*cRank = 'T';
+		break;
+	case 9:
+		*cRank = '9';
+		break;
+	case 8:
+		*cRank = '8';
+		break;
+	case 7:
+		*cRank = '7';
+		break;
+	case 6:
+		*cRank = '6';
+		break;
+	case 5:
+		*cRank = '5';
+		break;
+	case 4:
+		*cRank = '4';
+		break;
+	case 3:
+		*cRank = '3';
+		break;
+	case 2:
+		*cRank = '2';
+		break;
+	}
+}
+
+void Suit(int suit, char* cSuit)
+{
+	switch (suit)
+	{
+	case 0:
+		*cSuit = 'h';
+		break;
+
+	case 1:
+		*cSuit = 'd';
+		break;
+
+	case 2:
+		*cSuit = 'c';
+		break;
+
+	case 3:
+		*cSuit = 's';
+		break;
+	}
+}
+
 // Сдвиг вправо по кругу
 unsigned int Rotr(unsigned int value, unsigned int size, unsigned int count)
 {
@@ -37,81 +113,37 @@ void Preflop()
 	mutex.lock();
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
 	{
-		if (GetSymbol("InMiddlePosition2"))
+		for (int i = 0; i < 169; i++)
 		{
-			// position = ;
-			if (GetSymbol("list_MP2_OR"))
+			if (GetSymbol("Hand") == hand[i])
 			{
+				if (входит в диапазон открытия рейзом)
+					colorFrame[i] = 2;					// Рисуем красную рамку
+				else
+					colorFrame[i] = 1;					// Рисуем серую рамку
+
+			}
+
+			// Определяем цвет квадрата
+			if (hand[i] == MP2 && GetSymbol("InMiddlePosition2") ||
+				hand[i] == MP3 && GetSymbol("InMiddlePosition3") ||
+				hand[i] == CO && GetSymbol("InCutOff") ||
+				hand[i] == BU && (GetSymbol("InButton")))
+			{
+				// Рисуем светлый квадрат
 
 			}
 			else
 			{
-
-			}
-		}
-		else if (GetSymbol("InMiddlePosition3"))
-		{
-			if (GetSymbol("list_MP3_OR"))
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-		else if (GetSymbol("InCutOff"))
-		{
-			if (GetSymbol("list_CO_OR"))
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-		else if (GetSymbol("InButton"))
-		{
-			if (GetSymbol("list_BU_OR"))
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-		else if (GetSymbol("InSmallBlind"))
-		{
-			if (GetSymbol("list_SB_OR"))
-			{
-
-			}
-			else
-			{
-
+				// Рисуем темный квадрат
 			}
 		}
 	}
 	mutex.unlock();
 }
-
+		
 
 /*
-
-bool identified;
-int color[169];			// Диапазон (массив цветов для матрицы диапазона)
-char action[100] = "";	// Действие
-char position[] = "";	// Позиция
-char hand[10] = "";		// Рука
-
-// Объявления функций
-void Preflop();
-DWORD WINAPI GUIThread(LPVOID param);
-void PaintDiapazon(HDC hdc, int x, int y, char* diapazon);
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void Paint(HDC hdc);
 
 // Переменные для хранения выводимых данных
 char paintRange[] = "22+, A2s+, K2s+, Q2s+, J2s+, T2s+, 92s+, 82s+, 72s+, 62s+, 52s+, 42s+, 32s, A2o+, K2o+, Q2o+, J2o+, T2o+, 92o+, 82o+, 72o+, 62o+, 52o+, 42o+, 32o";
@@ -119,9 +151,6 @@ char myHand[10] = "";
 char myVarHand[10] = "";
 bool handInRange = false;
 char* actions[3] = { "Raise", "Call", "Fold" };
-
-
-
 
 //
 // Считывает диапазон комбинаций до запятой или до конца строки

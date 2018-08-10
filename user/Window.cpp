@@ -56,7 +56,6 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	HDC hCompatibleDC;
 	HANDLE hOldBitmap;
 	BITMAP Bitmap;
-	HANDLE mutex;
 
 	switch (message)
 	{
@@ -68,7 +67,6 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 		hdc = BeginPaint(hWnd, &ps);
 		hCompatibleDC = CreateCompatibleDC(hdc);
-		// mutex = CreateMutex();
 
 		Paint(hdc);
 
@@ -322,7 +320,7 @@ void Paint(HDC hdc)
 	//COLORREF oldColorFont = SetTextColor(hdc, colorFont);
 	SetBkMode(hdc, TRANSPARENT); // Прозрачный фон шрифта
 
-	// Создаем и иннициализируем матрицу всего диапазона
+	// Создаем и иннициализируем матрицу всего диапазона 13 x 13 =  169
 	char* char_comb[169];
 	InitCharComb(char_comb);
 
