@@ -11,6 +11,7 @@ void Preflop();
 void Rank(int rank, char* cRank);
 void Suit(int suit, char* cSuit);
 void Hand(char* hand);
+void Hand169(char* hand, char* hand169);
 
 
 /*

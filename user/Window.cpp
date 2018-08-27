@@ -32,7 +32,7 @@ DWORD WINAPI WindowThread(LPVOID param)
 
 	// Создать окно
 	HWND hWnd = CreateWindow("FORTUNA", "Fortuna", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, 0, 700, 600, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, 0, 600, 500, NULL, NULL, hInstance, NULL);
 
 	// Показываем и обновляем окно
 	ShowWindow(hWnd, SW_SHOW);
@@ -67,7 +67,7 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 		hdc = BeginPaint(hWnd, &ps);
 		hCompatibleDC = CreateCompatibleDC(hdc);
-
+		
 		Paint(hdc);
 
 		DeleteDC(hCompatibleDC);
@@ -289,14 +289,16 @@ void Paint(HDC hdc)
 	COLORREF color3 = RGB(54, 196, 33);		// Зеленый
 	COLORREF color4 = RGB(240, 10, 10);		// Красный
 	COLORREF color5 = RGB(240, 240, 10);	// Оранжевый
+	COLORREF color6 = RGB(185, 208, 233);
 
 	// Кисти
-	HBRUSH hbr[5];
+	HBRUSH hbr[6];
 	hbr[0] = CreateSolidBrush(color1);
 	hbr[1] = CreateSolidBrush(color2);
 	hbr[2] = CreateSolidBrush(color3);
 	hbr[3] = CreateSolidBrush(color4);
 	hbr[4] = CreateSolidBrush(color5);
+	hbr[5] = CreateSolidBrush(color6);
 
 	// Шрифт
 	LOGFONT font;
@@ -327,11 +329,14 @@ void Paint(HDC hdc)
 	// Блокируем мьютекс для доступа к данным
 	mutex.lock();
 
+	// Отладка
+	cls = true;
+
 	if (cls)
 	{
 		// Рисуем прямоугольник (очистка окна)
-		SetRect(&rect, 0, 0, 700, 600);
-		FillRect(hdc, &rect, hbr[2]);
+		SetRect(&rect, 0, 0, 600, 500);
+		FillRect(hdc, &rect, hbr[5]);
 	}
 	else
 	{

@@ -80,21 +80,39 @@ void Hand(char* hand)
 	Suit(GetSymbol("$$ps1"), hand + 3);
 }
 
+void Hand169(char* hand, char* hand169)
+{
+	if (hand[0] == hand[2])
+	{
+		hand169[0] = hand[0];
+		hand169[1] = hand[0];
+	}
+	else if (hand[1] == hand[3])
+	{
+		hand169[0] = hand[0];
+		hand169[1] = hand[2];
+		hand169[2] = 's';
+	}
+	else if (hand[1] != hand[3])
+	{
+		hand169[0] = hand[0];
+		hand169[1] = hand[2];
+		hand169[2] = 'o';
+	}
+
+}
+
 // Стратегия игры на префлопе
 void Preflop()
 {
 	// Наша рука
 	char hand[10] = "";
+	char hand169[10] = "";
 	Hand(hand);
+	Hand169(hand, hand169);
 }
 
 /*
-
-	void Hand169(char* hand, char* hand169)
-{
-
-
-}
 
 bool ChekHand(char* hand169, char* range)
 {
@@ -129,8 +147,6 @@ int RightCalls()
 	return (Rotr(call, nchairs, bb) & maska);
 }
 
-
-	Hand169(hand, hand169);
 	char* arr_hand169[169];
 	InitHand169(arr_hand169);
 
