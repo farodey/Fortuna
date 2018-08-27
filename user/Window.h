@@ -12,5 +12,5 @@ std::mutex mutex;
 void Window(HANDLE hModule);
 DWORD WINAPI WindowThread(LPVOID param);
 LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void InitCharComb(char* char_comb[]);
+void InitHand169(char* hand169[]);
 void Paint(HDC hdc);

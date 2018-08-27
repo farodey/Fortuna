@@ -1,16 +1,16 @@
 #pragma once
 
-unsigned int Rotr(unsigned int value, unsigned int size, unsigned int count);
-int RightCalls();
-void Hand(char*);
-void Preflop();
-
 // Open Raise
 char or_mp2[] = "55+, ATs+, KTs+, QTs+, J9s+, T9s, 98s, 87s, 76s, 65s, AJo+, KQo";
 char or_mp3[] = "22+, A8s+, A5s-A4s, KTs+, QTs+, J9s+, T8s+, 97s+, 86s+, 76s, 65s, 54s, ATo+, KQo";
-char or_co[]  = "22+, A2s+, K6s+, Q7s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, ATo+, KJo+, QJo, JTo, T9o";
-char or_bu[]  = "22+, A2s+, K2s+, Q2s+, J4s+, T6s+, 96s+, 85s+, 74s+, 64s+, 54s, A2o+, K7o+, Q8o+, J9o+, T8o+, 98o, 87o";
-char or_sb[]  = "22+, A2s+, K2s+, Q4s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, A7o+, K9o+, Q9o+, J9o+, T9o, 98o";
+char or_co[] = "22+, A2s+, K6s+, Q7s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, ATo+, KJo+, QJo, JTo, T9o";
+char or_bu[] = "22+, A2s+, K2s+, Q2s+, J4s+, T6s+, 96s+, 85s+, 74s+, 64s+, 54s, A2o+, K7o+, Q8o+, J9o+, T8o+, 98o, 87o";
+char or_sb[] = "22+, A2s+, K2s+, Q4s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, A7o+, K9o+, Q9o+, J9o+, T9o, 98o";
+
+void Preflop();
+void Rank(int rank, char* cRank);
+void Suit(int suit, char* cSuit);
+void Hand(char* hand);
 
 
 /*

@@ -83,202 +83,202 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
-void InitCharComb(char* char_comb[])
+void InitHand169(char* hand169[])
 {
 	// 1
-	char_comb[0] = "AA";
-	char_comb[1] = "AKs";
-	char_comb[2] = "AQs";
-	char_comb[3] = "AJs";
-	char_comb[4] = "ATs";
-	char_comb[5] = "A9s";
-	char_comb[6] = "A8s";
-	char_comb[7] = "A7s";
-	char_comb[8] = "A6s";
-	char_comb[9] = "A5s";
-	char_comb[10] = "A4s";
-	char_comb[11] = "A3s";
-	char_comb[12] = "A2s";
+	hand169[0] = "AA";
+	hand169[1] = "AKs";
+	hand169[2] = "AQs";
+	hand169[3] = "AJs";
+	hand169[4] = "ATs";
+	hand169[5] = "A9s";
+	hand169[6] = "A8s";
+	hand169[7] = "A7s";
+	hand169[8] = "A6s";
+	hand169[9] = "A5s";
+	hand169[10] = "A4s";
+	hand169[11] = "A3s";
+	hand169[12] = "A2s";
 
 	// 2
-	char_comb[13] = "AKo";
-	char_comb[14] = "KK";
-	char_comb[15] = "KQs";
-	char_comb[16] = "kJs";
-	char_comb[17] = "KTs";
-	char_comb[18] = "K9s";
-	char_comb[19] = "K9s";
-	char_comb[20] = "K7s";
-	char_comb[21] = "K6s";
-	char_comb[22] = "K5s";
-	char_comb[23] = "K4s";
-	char_comb[24] = "K3s";
-	char_comb[25] = "K2s";
+	hand169[13] = "AKo";
+	hand169[14] = "KK";
+	hand169[15] = "KQs";
+	hand169[16] = "kJs";
+	hand169[17] = "KTs";
+	hand169[18] = "K9s";
+	hand169[19] = "K9s";
+	hand169[20] = "K7s";
+	hand169[21] = "K6s";
+	hand169[22] = "K5s";
+	hand169[23] = "K4s";
+	hand169[24] = "K3s";
+	hand169[25] = "K2s";
 
 	// 3
-	char_comb[26] = "AQo";
-	char_comb[27] = "KQo";
-	char_comb[28] = "QQ";
-	char_comb[29] = "QJs";
-	char_comb[30] = "QTs";
-	char_comb[31] = "Q9s";
-	char_comb[32] = "Q8s";
-	char_comb[33] = "Q7s";
-	char_comb[34] = "Q6s";
-	char_comb[35] = "Q5s";
-	char_comb[36] = "Q4s";
-	char_comb[37] = "Q3s";
-	char_comb[38] = "Q2s";
+	hand169[26] = "AQo";
+	hand169[27] = "KQo";
+	hand169[28] = "QQ";
+	hand169[29] = "QJs";
+	hand169[30] = "QTs";
+	hand169[31] = "Q9s";
+	hand169[32] = "Q8s";
+	hand169[33] = "Q7s";
+	hand169[34] = "Q6s";
+	hand169[35] = "Q5s";
+	hand169[36] = "Q4s";
+	hand169[37] = "Q3s";
+	hand169[38] = "Q2s";
 
 	// 4
-	char_comb[39] = "AJo";
-	char_comb[40] = "KJo";
-	char_comb[41] = "QJo";
-	char_comb[42] = "JJ";
-	char_comb[43] = "JTs";
-	char_comb[44] = "J9s";
-	char_comb[45] = "J8s";
-	char_comb[46] = "J7s";
-	char_comb[47] = "J6s";
-	char_comb[48] = "J5s";
-	char_comb[49] = "J4s";
-	char_comb[50] = "J3s";
-	char_comb[51] = "J2s";
+	hand169[39] = "AJo";
+	hand169[40] = "KJo";
+	hand169[41] = "QJo";
+	hand169[42] = "JJ";
+	hand169[43] = "JTs";
+	hand169[44] = "J9s";
+	hand169[45] = "J8s";
+	hand169[46] = "J7s";
+	hand169[47] = "J6s";
+	hand169[48] = "J5s";
+	hand169[49] = "J4s";
+	hand169[50] = "J3s";
+	hand169[51] = "J2s";
 
 	// 5
-	char_comb[52] = "ATo";
-	char_comb[53] = "KTo";
-	char_comb[54] = "QTo";
-	char_comb[55] = "JTo";
-	char_comb[56] = "TT";
-	char_comb[57] = "T9s";
-	char_comb[58] = "T8s";
-	char_comb[59] = "T7s";
-	char_comb[60] = "T6s";
-	char_comb[61] = "T5s";
-	char_comb[62] = "T4s";
-	char_comb[63] = "T3s";
-	char_comb[64] = "T2s";
+	hand169[52] = "ATo";
+	hand169[53] = "KTo";
+	hand169[54] = "QTo";
+	hand169[55] = "JTo";
+	hand169[56] = "TT";
+	hand169[57] = "T9s";
+	hand169[58] = "T8s";
+	hand169[59] = "T7s";
+	hand169[60] = "T6s";
+	hand169[61] = "T5s";
+	hand169[62] = "T4s";
+	hand169[63] = "T3s";
+	hand169[64] = "T2s";
 
 	// 6
-	char_comb[65] = "A9o";
-	char_comb[66] = "K9o";
-	char_comb[67] = "Q9o";
-	char_comb[68] = "J9o";
-	char_comb[69] = "T9o";
-	char_comb[70] = "99";
-	char_comb[71] = "98s";
-	char_comb[72] = "97s";
-	char_comb[73] = "96s";
-	char_comb[74] = "95s";
-	char_comb[75] = "94s";
-	char_comb[76] = "93s";
-	char_comb[77] = "92s";
+	hand169[65] = "A9o";
+	hand169[66] = "K9o";
+	hand169[67] = "Q9o";
+	hand169[68] = "J9o";
+	hand169[69] = "T9o";
+	hand169[70] = "99";
+	hand169[71] = "98s";
+	hand169[72] = "97s";
+	hand169[73] = "96s";
+	hand169[74] = "95s";
+	hand169[75] = "94s";
+	hand169[76] = "93s";
+	hand169[77] = "92s";
 
 	// 7
-	char_comb[78] = "A8o";
-	char_comb[79] = "K8o";
-	char_comb[80] = "Q8o";
-	char_comb[81] = "J8o";
-	char_comb[82] = "T8o";
-	char_comb[83] = "98o";
-	char_comb[84] = "88";
-	char_comb[85] = "87s";
-	char_comb[86] = "86s";
-	char_comb[87] = "85s";
-	char_comb[88] = "84s";
-	char_comb[89] = "83s";
-	char_comb[90] = "82s";
+	hand169[78] = "A8o";
+	hand169[79] = "K8o";
+	hand169[80] = "Q8o";
+	hand169[81] = "J8o";
+	hand169[82] = "T8o";
+	hand169[83] = "98o";
+	hand169[84] = "88";
+	hand169[85] = "87s";
+	hand169[86] = "86s";
+	hand169[87] = "85s";
+	hand169[88] = "84s";
+	hand169[89] = "83s";
+	hand169[90] = "82s";
 
 	// 8
-	char_comb[91] = "A7o";
-	char_comb[92] = "K7o";
-	char_comb[93] = "Q7o";
-	char_comb[94] = "J7o";
-	char_comb[95] = "T7o";
-	char_comb[96] = "97o";
-	char_comb[97] = "87o";
-	char_comb[98] = "77";
-	char_comb[99] = "76s";
-	char_comb[100] = "75s";
-	char_comb[101] = "74s";
-	char_comb[102] = "73s";
-	char_comb[103] = "72s";
+	hand169[91] = "A7o";
+	hand169[92] = "K7o";
+	hand169[93] = "Q7o";
+	hand169[94] = "J7o";
+	hand169[95] = "T7o";
+	hand169[96] = "97o";
+	hand169[97] = "87o";
+	hand169[98] = "77";
+	hand169[99] = "76s";
+	hand169[100] = "75s";
+	hand169[101] = "74s";
+	hand169[102] = "73s";
+	hand169[103] = "72s";
 
 	// 9
-	char_comb[104] = "A6o";
-	char_comb[105] = "K6o";
-	char_comb[106] = "Q6o";
-	char_comb[107] = "J6o";
-	char_comb[108] = "T6o";
-	char_comb[109] = "96o";
-	char_comb[110] = "86o";
-	char_comb[111] = "76o";
-	char_comb[112] = "66";
-	char_comb[113] = "65s";
-	char_comb[114] = "64s";
-	char_comb[115] = "63s";
-	char_comb[116] = "62s";
+	hand169[104] = "A6o";
+	hand169[105] = "K6o";
+	hand169[106] = "Q6o";
+	hand169[107] = "J6o";
+	hand169[108] = "T6o";
+	hand169[109] = "96o";
+	hand169[110] = "86o";
+	hand169[111] = "76o";
+	hand169[112] = "66";
+	hand169[113] = "65s";
+	hand169[114] = "64s";
+	hand169[115] = "63s";
+	hand169[116] = "62s";
 
 	// 10
-	char_comb[117] = "A5o";
-	char_comb[118] = "K5o";
-	char_comb[119] = "Q5o";
-	char_comb[120] = "J5o";
-	char_comb[121] = "T5o";
-	char_comb[122] = "95o";
-	char_comb[123] = "85o";
-	char_comb[124] = "75o";
-	char_comb[125] = "65o";
-	char_comb[126] = "55";
-	char_comb[127] = "54s";
-	char_comb[128] = "53s";
-	char_comb[129] = "52s";
+	hand169[117] = "A5o";
+	hand169[118] = "K5o";
+	hand169[119] = "Q5o";
+	hand169[120] = "J5o";
+	hand169[121] = "T5o";
+	hand169[122] = "95o";
+	hand169[123] = "85o";
+	hand169[124] = "75o";
+	hand169[125] = "65o";
+	hand169[126] = "55";
+	hand169[127] = "54s";
+	hand169[128] = "53s";
+	hand169[129] = "52s";
 
 	// 11
-	char_comb[130] = "A4o";
-	char_comb[131] = "K4o";
-	char_comb[132] = "Q4o";
-	char_comb[133] = "J4o";
-	char_comb[134] = "T4o";
-	char_comb[135] = "94o";
-	char_comb[136] = "84o";
-	char_comb[137] = "74o";
-	char_comb[138] = "64o";
-	char_comb[139] = "54o";
-	char_comb[140] = "44";
-	char_comb[141] = "43s";
-	char_comb[142] = "42s";
+	hand169[130] = "A4o";
+	hand169[131] = "K4o";
+	hand169[132] = "Q4o";
+	hand169[133] = "J4o";
+	hand169[134] = "T4o";
+	hand169[135] = "94o";
+	hand169[136] = "84o";
+	hand169[137] = "74o";
+	hand169[138] = "64o";
+	hand169[139] = "54o";
+	hand169[140] = "44";
+	hand169[141] = "43s";
+	hand169[142] = "42s";
 
 	// 12
-	char_comb[143] = "A3o";
-	char_comb[144] = "K3o";
-	char_comb[145] = "Q3o";
-	char_comb[146] = "J3o";
-	char_comb[147] = "T3o";
-	char_comb[148] = "93o";
-	char_comb[149] = "83o";
-	char_comb[150] = "73o";
-	char_comb[151] = "63o";
-	char_comb[152] = "53o";
-	char_comb[153] = "43o";
-	char_comb[154] = "33";
-	char_comb[155] = "32s";
+	hand169[143] = "A3o";
+	hand169[144] = "K3o";
+	hand169[145] = "Q3o";
+	hand169[146] = "J3o";
+	hand169[147] = "T3o";
+	hand169[148] = "93o";
+	hand169[149] = "83o";
+	hand169[150] = "73o";
+	hand169[151] = "63o";
+	hand169[152] = "53o";
+	hand169[153] = "43o";
+	hand169[154] = "33";
+	hand169[155] = "32s";
 
 	// 13
-	char_comb[156] = "A2o";
-	char_comb[157] = "K2o";
-	char_comb[158] = "Q2o";
-	char_comb[159] = "J2o";
-	char_comb[160] = "T2o";
-	char_comb[161] = "92o";
-	char_comb[162] = "82o";
-	char_comb[163] = "72o";
-	char_comb[164] = "62o";
-	char_comb[165] = "52o";
-	char_comb[166] = "42o";
-	char_comb[167] = "32o";
-	char_comb[168] = "22";
+	hand169[156] = "A2o";
+	hand169[157] = "K2o";
+	hand169[158] = "Q2o";
+	hand169[159] = "J2o";
+	hand169[160] = "T2o";
+	hand169[161] = "92o";
+	hand169[162] = "82o";
+	hand169[163] = "72o";
+	hand169[164] = "62o";
+	hand169[165] = "52o";
+	hand169[166] = "42o";
+	hand169[167] = "32o";
+	hand169[168] = "22";
 }
 
 void Paint(HDC hdc)
@@ -321,8 +321,8 @@ void Paint(HDC hdc)
 	SetBkMode(hdc, TRANSPARENT); // Прозрачный фон шрифта
 
 	// Создаем и иннициализируем матрицу всего диапазона 13 x 13 =  169
-	char* char_comb[169];
-	InitCharComb(char_comb);
+	char* hand169[169];
+	InitHand169(hand169);
 
 	// Блокируем мьютекс для доступа к данным
 	mutex.lock();
@@ -347,7 +347,7 @@ void Paint(HDC hdc)
 
 				// Выводим название комбинации поверх прямоугольниука
 				SelectObject(hdc, hFont);
-				TextOut(hdc, 10 + x * 20, 10 + y * 20, char_comb[index_comb], lstrlen(char_comb[index_comb]));
+				TextOut(hdc, 10 + x * 20, 10 + y * 20, hand169[index_comb], lstrlen(hand169[index_comb]));
 				index_comb++;
 			}
 		}

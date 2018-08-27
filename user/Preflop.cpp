@@ -1,17 +1,7 @@
-#include <Windows.h>
-#include <mutex>
-#include "Window.h"
 #include "OpenHoldemFunctions.h"
 #include "Preflop.h"
 
-void Hand(char* returnBuffer)
-{
-	Rank(GetSymbol("$$pr0"), returnBuffer);
-	Suit(GetSymbol("$$ps0"), returnBuffer + 1);
-	Rank(GetSymbol("$$pr1"), returnBuffer + 2);
-	Suit(GetSymbol("$$ps1"), returnBuffer + 3);
-}
-
+// Ранг карты
 void Rank(int rank, char* cRank)
 {
 	switch (rank)
@@ -58,6 +48,7 @@ void Rank(int rank, char* cRank)
 	}
 }
 
+// Масть карты
 void Suit(int suit, char* cSuit)
 {
 	switch (suit)
@@ -78,6 +69,36 @@ void Suit(int suit, char* cSuit)
 		*cSuit = 's';
 		break;
 	}
+}
+
+// Наша рука
+void Hand(char* hand)
+{
+	Rank(GetSymbol("$$pr0"), hand);
+	Suit(GetSymbol("$$ps0"), hand + 1);
+	Rank(GetSymbol("$$pr1"), hand + 2);
+	Suit(GetSymbol("$$ps1"), hand + 3);
+}
+
+// Стратегия игры на префлопе
+void Preflop()
+{
+	// Наша рука
+	char hand[10] = "";
+	Hand(hand);
+}
+
+/*
+
+	void Hand169(char* hand, char* hand169)
+{
+
+
+}
+
+bool ChekHand(char* hand169, char* range)
+{
+
 }
 
 // Сдвиг вправо по кругу
@@ -108,40 +129,46 @@ int RightCalls()
 	return (Rotr(call, nchairs, bb) & maska);
 }
 
-void Preflop()
-{
-	mutex.lock();
+
+	Hand169(hand, hand169);
+	char* arr_hand169[169];
+	InitHand169(arr_hand169);
+
+	// Никто на префлопе добровольно не вкладывался
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
 	{
 		for (int i = 0; i < 169; i++)
 		{
-			if (GetSymbol("Hand") == hand[i])
+			// Если рука в счетчике рук входит в диапазон открытия рейзом с этой позиции
+			if ((GetSymbol("InMiddlePosition2") && ChekHand(arr_hand169[i], or_mp2)) ||
+				(GetSymbol("InMiddlePosition3") && ChekHand(arr_hand169[i], or_mp3)) ||
+				(GetSymbol("InCutOff")			&& ChekHand(arr_hand169[i], or_co))  ||
+				(GetSymbol("InButton")			&& ChekHand(arr_hand169[i], or_bu))  ||
+				(GetSymbol("InSmallBlind ")		&& ChekHand(arr_hand169[i], or_sb)))
 			{
-				if (входит в диапазон открытия рейзом)
-					colorFrame[i] = 2;					// Рисуем красную рамку
-				else
-					colorFrame[i] = 1;					// Рисуем серую рамку
-
-			}
-
-			// Определяем цвет квадрата
-			if (hand[i] == MP2 && GetSymbol("InMiddlePosition2") ||
-				hand[i] == MP3 && GetSymbol("InMiddlePosition3") ||
-				hand[i] == CO && GetSymbol("InCutOff") ||
-				hand[i] == BU && (GetSymbol("InButton")))
-			{
-				// Рисуем светлый квадрат
-
+				colorRect[i] = 2; // Светлый квадрат
+				if (strcmp(arr_hand169[i], hand169))
+				{
+					// Красная рамка
+					colorFrame[i] = 2;
+				}
 			}
 			else
 			{
-				// Рисуем темный квадрат
+				colorRect[i] = 1;	// Темный квадрат
+				if (strcmp(arr_hand169[i], hand169))
+				{
+					// Серая рамка
+					colorFrame[i] = 1;
+				}
 			}
 		}
 	}
-	mutex.unlock();
-}
-		
+
+	*/
+
+	// Освобождаем мьютекс
+	// mutex.unlock();		
 
 /*
 
