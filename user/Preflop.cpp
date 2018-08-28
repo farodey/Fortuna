@@ -1,8 +1,9 @@
+#include <mutex>
 #include "OpenHoldemFunctions.h"
 #include "Preflop.h"
 
 // Ранг карты
-void Rank(int rank, char* cRank)
+void RankIntToChar(int rank, char* cRank)
 {
 	switch (rank)
 	{
@@ -48,6 +49,54 @@ void Rank(int rank, char* cRank)
 	}
 }
 
+int RankCharToInt(char* cRank)
+{
+	int x = 0;
+	switch (*cRank)
+	{
+	case 'A':
+		x = 14;
+		break;
+	case 'K':
+		x = 12;
+		break;
+	case 'Q':
+		x = 12;
+		break;
+	case 'J':
+		x = 11;
+		break;
+	case 'T':
+		x = 10;
+		break;
+	case '9':
+		x = 9;
+		break;
+	case '8':
+		x = 8;
+		break;
+	case '7':
+		x = 7;
+		break;
+	case '6':
+		x = 6;
+		break;
+	case '5':
+		x = 5;
+		break;
+	case '4':
+		x = 4;
+		break;
+	case '3':
+		x = 3;
+		break;
+	case '2':
+		x = 2;
+		break;
+	}
+	return x;
+}
+
 // Масть карты
 void Suit(int suit, char* cSuit)
 {
@@ -72,15 +121,16 @@ void Suit(int suit, char* cSuit)
 }
 
 // Наша рука
-void Hand(char* hand)
+void GetHand(char* hand)
 {
-	Rank(GetSymbol("$$pr0"), hand);
+	RankIntToChar(GetSymbol("$$pr0"), hand);
 	Suit(GetSymbol("$$ps0"), hand + 1);
-	Rank(GetSymbol("$$pr1"), hand + 2);
+	RankIntToChar(GetSymbol("$$pr1"), hand + 2);
 	Suit(GetSymbol("$$ps1"), hand + 3);
 }
 
-void Hand169(char* hand, char* hand169)
+// Конвертация hand в hand169
+void HandToHand169(char* hand, char* hand169)
 {
 	if (hand[0] == hand[2])
 	{
@@ -99,23 +149,6 @@ void Hand169(char* hand, char* hand169)
 		hand169[1] = hand[2];
 		hand169[2] = 'o';
 	}
-
-}
-
-// Стратегия игры на префлопе
-void Preflop()
-{
-	// Наша рука
-	char hand[10] = "";
-	char hand169[10] = "";
-	Hand(hand);
-	Hand169(hand, hand169);
-}
-
-/*
-
-bool ChekHand(char* hand169, char* range)
-{
 
 }
 
@@ -147,8 +180,165 @@ int RightCalls()
 	return (Rotr(call, nchairs, bb) & maska);
 }
 
-	char* arr_hand169[169];
-	InitHand169(arr_hand169);
+bool CheckHand169Range(char* hand169, char* range)
+{
+	char subrange[10] = "";
+	char* pRange = range;
+
+	while (ReadSubrange(pRange, subrange) != 0)
+	{
+		if (CheckHand169Subrange(hand169, subrange) == true)
+		{
+			// Рука входит в диапазон
+			return true;
+		}
+		else
+		{
+			// Сдвигаем указатель для следующего чтения поддиапазона
+			pRange += ReadSubrange(pRange, subrange);
+		}
+	}
+	return false;
+}
+
+bool CheckHand169Subrange(char* hand169, char* subrange)
+{
+	// Пара
+	if (hand169[0] == hand169[1])
+	{
+		// Если в поддиапазоне тоже пара
+		if (subrange[0] == subrange[1])
+		{
+			
+			if (subrange[2] == '+')
+			{
+				if (RankCharToInt(subrange) <= RankCharToInt(hand169))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (subrange[2] == ',')
+			{
+				if (RankCharToInt(subrange) == RankCharToInt(hand169))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (subrange[2] == '-')
+			{
+				if (RankCharToInt(subrange) <= RankCharToInt(hand169) && RankCharToInt(subrange + 3) >= RankCharToInt(hand169))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	// Одномастная комбинация
+	else if (hand169[2] == 's')
+	{
+		// Если в поддиапазоне тоже одномастная комбинация
+		if (subrange[2] == 's')
+		{
+
+			if (subrange[3] == '+')
+			{
+
+			}
+			else if (subrange[3] == ',')
+			{
+
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	// Разномастная комбинация
+	else if (hand169[2] == 'o')
+	{
+		// Если в поддиапазоне тоже разномастная комбинация
+		if (subrange[2] == 'o')
+		{
+
+			if (subrange[3] == '+')
+			{
+
+			}
+			else if (subrange[3] == ',')
+			{
+
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
+}
+
+// Считывает диапазон комбинаций до запятой или до конца строки
+// 0 - не считали, ошибка
+int ReadSubrange(char* inputRange, char* outputSubrange)
+{
+	for (int x = 0; ; x++)
+	{
+		if (inputRange[x] == ',' || inputRange[x] == 0)
+		{
+			outputSubrange[x] = 0;
+			return x;
+		}
+		else
+		{
+			outputSubrange[x] = inputRange[x];
+		}
+	}
+}
+
+// Стратегия игры на префлопе
+void Preflop()
+{
+	// Внешние переменные, синхронизация доступа через мьютекс 
+	extern int colorRect[169];
+	extern bool cls;					// Очистка
+	extern int colorRect[169];			// Массив цветов квадратов в матрице диапазона
+	extern int colorFrame[169];			// Массив цветов рамок вокруг квадратов в матрице диапазона
+	extern char text1[100];				// Действие
+	extern char text2[100];				// Позиция
+	extern char text3[100];				// Рука
+	extern std::mutex mutex;			// Мьютекс
+	
+	// Переменные
+	char hand[10] = "";
+	char hand169[10] = "";
+	char* a_hand169[169];
+
+	// Инициализируем переменные
+	GetHand(hand);
+	HandToHand169(hand, hand169);
+	InitHand169(a_hand169);
+
+	// Блокируем мьютекс
+	mutex.lock();
 
 	// Никто на префлопе добровольно не вкладывался
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
@@ -156,14 +346,14 @@ int RightCalls()
 		for (int i = 0; i < 169; i++)
 		{
 			// Если рука в счетчике рук входит в диапазон открытия рейзом с этой позиции
-			if ((GetSymbol("InMiddlePosition2") && ChekHand(arr_hand169[i], or_mp2)) ||
-				(GetSymbol("InMiddlePosition3") && ChekHand(arr_hand169[i], or_mp3)) ||
-				(GetSymbol("InCutOff")			&& ChekHand(arr_hand169[i], or_co))  ||
-				(GetSymbol("InButton")			&& ChekHand(arr_hand169[i], or_bu))  ||
-				(GetSymbol("InSmallBlind ")		&& ChekHand(arr_hand169[i], or_sb)))
+			if ((GetSymbol("InMiddlePosition2") && CheckHand169Range(a_hand169[i], OR_MP2))	||
+				(GetSymbol("InMiddlePosition3") && CheckHand169Range(a_hand169[i], OR_MP3))	||
+				(GetSymbol("InCutOff")			&& CheckHand169Range(a_hand169[i], OR_CO))	||
+				(GetSymbol("InButton")			&& CheckHand169Range(a_hand169[i], OR_BU))	||
+				(GetSymbol("InSmallBlind ")		&& CheckHand169Range(a_hand169[i], OR_SB)))
 			{
 				colorRect[i] = 2; // Светлый квадрат
-				if (strcmp(arr_hand169[i], hand169))
+				if (strcmp(a_hand169[i], hand169))
 				{
 					// Красная рамка
 					colorFrame[i] = 2;
@@ -172,7 +362,7 @@ int RightCalls()
 			else
 			{
 				colorRect[i] = 1;	// Темный квадрат
-				if (strcmp(arr_hand169[i], hand169))
+				if (strcmp(a_hand169[i], hand169))
 				{
 					// Серая рамка
 					colorFrame[i] = 1;
@@ -180,11 +370,10 @@ int RightCalls()
 			}
 		}
 	}
-
-	*/
-
+	
 	// Освобождаем мьютекс
-	// mutex.unlock();		
+	mutex.unlock();	
+}
 
 /*
 
@@ -195,136 +384,15 @@ char myVarHand[10] = "";
 bool handInRange = false;
 char* actions[3] = { "Raise", "Call", "Fold" };
 
+
 //
-// Считывает диапазон комбинаций до запятой или до конца строки
-// 2 - считали, есть еще (т.е. запятая)
-// 1 - считали, но больше нету (конец строки, ноль)
-// 0 - не считали, ошибка
-//
-int ReadSubrange(char* inputRange, char* outputSubrange)
-{
-for (int x = 0; ; x++)
-{
-if (inputRange[x] == ',' || inputRange[x] == 0)
-{
-outputSubrange[x] = 0;
-return x;
-}
-else
-{
-outputSubrange[x] = inputRange[x];
-}
-}
-}
-
-// Возвращает ранг карты
-int ValueCard(char card)
-{
-int x = 0;
-switch (card)
-{
-case 'A':
-x = 14;
-break;
-case 'K':
-x = 12;
-break;
-case 'Q':
-x = 12;
-break;
-case 'J':
-x = 11;
-break;
-case 'T':
-x = 10;
-break;
-case '9':
-x = 9;
-break;
-case '8':
-x = 8;
-break;
-case '7':
-x = 7;
-break;
-case '6':
-x = 6;
-break;
-case '5':
-x = 5;
-break;
-case '4':
-x = 4;
-break;
-case '3':
-x = 3;
-break;
-case '2':
-x = 2;
-break;
-}
-return x;
-}
 
 
 
-BOOL CheckHandSubrange(char* hand, char* subrange)
-{
-if (lstrlen(ch_comb) == 2)
-{
-// Если проверяемая пара
-if (podDiap[0] == podDiap[1])
-{
-// Если в поддиапазоне тоже пара
-if (podDiap[2] == '+')
-{
-if (RangCard(podDiap[0]) <= RangCard(ch_comb[0]))
-{
-return TRUE;
-}
-}
-else if (podDiap[2] == ',')
-{
-
-}
-else if (podDiap[2] == '-')
-{
-
-}
-}
-}
-else if (ch_comb[2] == 's')
-{
-// Одномастная комбинация
-
-}
-else if (ch_comb[2] == 'o')
-{
-// Разномастная комбинация
-
-}
-return FALSE;
-}
 
 
-BOOL CheckHand(char* hand, char* range)
-{
-char subrange[10] = "";
-char* pRange = range;
 
-while (ReadSubrange(pRange, subrange) != 0)
-{
-if (CheckHandSubrange(hand, subrange) == TRUE)
-{
-// Рука входит в диапазон
-return TRUE;
-}
-else
-{
-// Сдвигаем указатель для следующего чтения поддиапазона
-pRange += ReadSubrange(pRange, subrange);
-}
-}
-return FALSE;
-}
+
+
+
 */

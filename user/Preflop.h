@@ -1,17 +1,32 @@
 #pragma once
 
 // Open Raise
-char or_mp2[] = "55+, ATs+, KTs+, QTs+, J9s+, T9s, 98s, 87s, 76s, 65s, AJo+, KQo";
-char or_mp3[] = "22+, A8s+, A5s-A4s, KTs+, QTs+, J9s+, T8s+, 97s+, 86s+, 76s, 65s, 54s, ATo+, KQo";
-char or_co[] = "22+, A2s+, K6s+, Q7s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, ATo+, KJo+, QJo, JTo, T9o";
-char or_bu[] = "22+, A2s+, K2s+, Q2s+, J4s+, T6s+, 96s+, 85s+, 74s+, 64s+, 54s, A2o+, K7o+, Q8o+, J9o+, T8o+, 98o, 87o";
-char or_sb[] = "22+, A2s+, K2s+, Q4s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, A7o+, K9o+, Q9o+, J9o+, T9o, 98o";
+char OR_MP2[] = "55+, ATs+, KTs+, QTs+, J9s+, T9s, 98s, 87s, 76s, 65s, AJo+, KQo";
+char OR_MP3[] = "22+, A8s+, A5s-A4s, KTs+, QTs+, J9s+, T8s+, 97s+, 86s+, 76s, 65s, 54s, ATo+, KQo";
+char OR_CO[] = "22+, A2s+, K6s+, Q7s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, ATo+, KJo+, QJo, JTo, T9o";
+char OR_BU[] = "22+, A2s+, K2s+, Q2s+, J4s+, T6s+, 96s+, 85s+, 74s+, 64s+, 54s, A2o+, K7o+, Q8o+, J9o+, T8o+, 98o, 87o";
+char OR_SB[] = "22+, A2s+, K2s+, Q4s+, J7s+, T7s+, 97s+, 86s+, 75s+, 64s+, 54s, A7o+, K9o+, Q9o+, J9o+, T9o, 98o";
+
+// Cold - Call
+char CC_MP3vsMP2[] = "QQ-77, AJs+, KQs, JTs, T9s, 98s, AQo+";
+char CC_COvsMP2[] = "QQ-55, ATs+, KQs, JTs, T9s, 98s, 87s, AQo+";
+char CC_BUvsMP2[] = "QQ-33, ATs+, KQs, JTs, T9s, 98s, 87s, 76s, AQo+";
+char CC_SBvsMP2[] = "QQ-44, AQs+, AQo+";
+char CC_BBvsMP2[] = "QQ-22, ATs+, KQs, JTs, AQo+";
 
 void Preflop();
-void Rank(int rank, char* cRank);
+void RankIntToChar(int rank, char* cRank);
+int  RankCharToInt(char* cRank);
 void Suit(int suit, char* cSuit);
-void Hand(char* hand);
-void Hand169(char* hand, char* hand169);
+void GetHand(char* hand);
+void HandToHand169(char* hand, char* hand169);
+extern void InitHand169(char* hand169[]);
+unsigned int Rotr(unsigned int value, unsigned int size, unsigned int count);
+int RightCalls();
+bool CheckHand169Range(char* hand169, char* range);
+bool CheckHand169Subrange(char* hand169, char* subrange);
+int ReadSubrange(char* inputRange, char* outputSubrange);
+
 
 
 /*
@@ -22,6 +37,7 @@ COvsUTG QQ - 55, ATs + , KQs, JTs, T9s, 98s, 87s, AQo +
 BTNvsUTG QQ - 33, ATs + , KQs, JTs, T9s, 98s, 87s, 76s, AQo +
 SBvsUTG QQ - 44, AQs + , AQo +
 BBvsUTG QQ - 22, ATs + , KQs, JTs, AQo +
+
 COvsMP QQ - 55, ATs + , KJs + , QJs, JTs, T9s, 98s, 87s, 76s, AQo +
 BTNvsMP JJ - 33, AQs - ATs, KTs + , QTs + , J9s + , T9s, 98s, 87s, 76s, 65s, AQo +
 SBvsMP QQ - 55, AQs, KQs, AQo +
