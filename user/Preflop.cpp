@@ -394,12 +394,7 @@ void Preflop()
 	char hand[10] = "";
 	char hand169[10] = "";
 	char* a_hand169[169];
-
-	// Уникальный идентификатор последней расчитанной ситуации
-	unsigned __int64 calcPlay = 0;
-	int calcRound = 0;
-	double calcPot = 0;
-
+	
 	// Инициализируем переменные
 	GetHand(hand);
 	HandToHand169(hand, hand169);
@@ -421,21 +416,30 @@ void Preflop()
 				(GetSymbol("InButton")			&& CheckHand169Range(a_hand169[i], OR_BU))	||
 				(GetSymbol("InSmallBlind ")		&& CheckHand169Range(a_hand169[i], OR_SB)))
 			{
-				colorRect[i] = 0;	// Светлый квадрат					
-				if (strcmp(a_hand169[i], hand169))
+				colorRect[i] = 0;	// Светлый квадрат
+				if (!strcmp(a_hand169[i], hand169))
 				{	
 					frame[i] = true;
 					colorFrame[i] = 3;	// Красная рамка
+				}
+				else
+				{
+					frame[i] = false;	// Нет рамки
 				}
 			}
 			else
 			{
 				colorRect[i] = 1;	// Темный квадрат
-				if (strcmp(a_hand169[i], hand169))
+				if (!strcmp(a_hand169[i], hand169))
 				{
 					frame[i] = true;
 					colorFrame[i] = 4;	// Серая рамка
 				}
+				else
+				{
+					frame[i] = false; // Нет рамки
+				}
+		
 			}
 		}
 	}
