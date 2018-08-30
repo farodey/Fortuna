@@ -31,8 +31,8 @@ DWORD WINAPI WindowThread(LPVOID param)
 	RegisterClassEx(&wcex);
 
 	// Создать окно
-	HWND hWnd = CreateWindow("FORTUNA", "Fortuna", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, 0, 600, 500, NULL, NULL, hInstance, NULL);
+	hWnd = CreateWindow("FORTUNA", "Fortuna", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		CW_USEDEFAULT, 0, 400, 400, NULL, NULL, hInstance, NULL);
 
 	// Показываем и обновляем окно
 	ShowWindow(hWnd, SW_SHOW);
@@ -284,21 +284,19 @@ void InitHand169(char* hand169[])
 void Paint(HDC hdc)
 {
 	// Цвета
-	COLORREF color1 = RGB(54, 31, 184);		// Темно-синий
-	COLORREF color2 = RGB(128, 128, 192);	// Светло-синий
-	COLORREF color3 = RGB(54, 196, 33);		// Зеленый
-	COLORREF color4 = RGB(240, 10, 10);		// Красный
-	COLORREF color5 = RGB(240, 240, 10);	// Оранжевый
-	COLORREF color6 = RGB(185, 208, 233);
+	COLORREF color0 = RGB(107, 181, 255);	// Светло-синий	
+	COLORREF color1 = RGB(0, 132, 231);		// Темно-синий
+	COLORREF color2 = RGB(245, 245, 245);	// Почти белый (фон в окне)
+	COLORREF color3 = RGB(255, 0, 0);		// Красный
+	COLORREF color4 = RGB(128, 128, 128);	// Серый
 
 	// Кисти
-	HBRUSH hbr[6];
-	hbr[0] = CreateSolidBrush(color1);
-	hbr[1] = CreateSolidBrush(color2);
-	hbr[2] = CreateSolidBrush(color3);
-	hbr[3] = CreateSolidBrush(color4);
-	hbr[4] = CreateSolidBrush(color5);
-	hbr[5] = CreateSolidBrush(color6);
+	HBRUSH hbr[5];
+	hbr[0] = CreateSolidBrush(color0);
+	hbr[1] = CreateSolidBrush(color1);
+	hbr[2] = CreateSolidBrush(color2);
+	hbr[3] = CreateSolidBrush(color3);
+	hbr[4] = CreateSolidBrush(color4);
 
 	// Шрифт
 	LOGFONT font;
@@ -329,13 +327,10 @@ void Paint(HDC hdc)
 	// Блокируем мьютекс для доступа к данным
 	mutex.lock();
 
-	// Отладка
-	cls = true;
-
 	if (cls)
 	{
 		// Рисуем прямоугольник (очистка окна)
-		SetRect(&rect, 0, 0, 600, 500);
+		SetRect(&rect, 0, 0, 400, 400);
 		FillRect(hdc, &rect, hbr[5]);
 	}
 	else
@@ -346,9 +341,22 @@ void Paint(HDC hdc)
 		{
 			for (int x = 0; x < 13; x++)
 			{
-				// Зарисовываем прямоугольник (левая, верхняя, правая, нижняя)
-				SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
-				FillRect(hdc, &rect, hbr[index_comb]);
+				if (frame[index_comb])
+				{
+					// Квадрат-рамка (левая, верхняя, правая, нижняя)
+					SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
+					FillRect(hdc, &rect, hbr[colorFrame[index_comb]]);
+					// Квадрат поменьше (левая, верхняя, правая, нижняя)
+					SetRect(&rect, 10 + x * 20 + 2, 10 + y * 20 + 2, 30 + x * 20 - 2, 30 + y * 20 - 2);
+					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
+
+				}
+				else
+				{
+					// Квадрат размером с квадрат-рамку (левая, верхняя, правая, нижняя)
+					SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
+					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
+				}
 
 				// Выводим название комбинации поверх прямоугольниука
 				SelectObject(hdc, hFont);
@@ -356,15 +364,6 @@ void Paint(HDC hdc)
 				index_comb++;
 			}
 		}
-
-		// Действие
-		TextOut(hdc, 300, 300, text1, lstrlen(text1));
-
-		// Позиция
-		TextOut(hdc, 300, 350, text2, lstrlen(text2));
-
-		// Рука
-		TextOut(hdc, 300, 400, text3, lstrlen(text3));
 	}
 
 	// Разблокируем мьютекс

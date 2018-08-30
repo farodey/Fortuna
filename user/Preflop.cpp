@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <mutex>
 #include "OpenHoldemFunctions.h"
 #include "Preflop.h"
@@ -180,6 +181,34 @@ int RightCalls()
 	return (Rotr(call, nchairs, bb) & maska);
 }
 
+//
+//  Считывает диапазон комбинаций до запятой или до конца строки
+//  Учитывает пробел в начале комбинации
+//  return число считанных символов
+//
+int ReadSubrange(char* inputRange, char* outputSubrange)
+{
+	int x = 0;
+	if (inputRange[0] == ' ')
+	{
+		inputRange++;
+		x = 1;
+	}
+
+	for (;; x++)
+	{
+		if (inputRange[x] == ',' || inputRange[x] == 0)
+		{
+			outputSubrange[x] = 0;
+			return x;
+		}
+		else
+		{
+			outputSubrange[x] = inputRange[x];
+		}
+	}
+}
+
 bool CheckHand169Range(char* hand169, char* range)
 {
 	char subrange[10] = "";
@@ -187,7 +216,7 @@ bool CheckHand169Range(char* hand169, char* range)
 
 	while (ReadSubrange(pRange, subrange) != 0)
 	{
-		if (CheckHand169Subrange(hand169, subrange) == true)
+		if (CheckHand169Subrange(hand169, subrange))
 		{
 			// Рука входит в диапазон
 			return true;
@@ -195,7 +224,7 @@ bool CheckHand169Range(char* hand169, char* range)
 		else
 		{
 			// Сдвигаем указатель для следующего чтения поддиапазона
-			pRange += ReadSubrange(pRange, subrange);
+			pRange = pRange + ReadSubrange(pRange, subrange) + 2;
 		}
 	}
 	return false;
@@ -259,11 +288,36 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 
 			if (subrange[3] == '+')
 			{
-
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else if (subrange[3] == ',')
 			{
-
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) == RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (subrange[3] == '-')
+			{
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		else
@@ -281,11 +335,36 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 
 			if (subrange[3] == '+')
 			{
-
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else if (subrange[3] == ',')
 			{
-
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) == RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if (subrange[3] == '-')
+			{
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		else
@@ -296,24 +375,6 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 	return false;
 }
 
-// Считывает диапазон комбинаций до запятой или до конца строки
-// 0 - не считали, ошибка
-int ReadSubrange(char* inputRange, char* outputSubrange)
-{
-	for (int x = 0; ; x++)
-	{
-		if (inputRange[x] == ',' || inputRange[x] == 0)
-		{
-			outputSubrange[x] = 0;
-			return x;
-		}
-		else
-		{
-			outputSubrange[x] = inputRange[x];
-		}
-	}
-}
-
 // Стратегия игры на префлопе
 void Preflop()
 {
@@ -321,16 +382,23 @@ void Preflop()
 	extern int colorRect[169];
 	extern bool cls;					// Очистка
 	extern int colorRect[169];			// Массив цветов квадратов в матрице диапазона
+	extern bool frame[169];				// Массив индикаторов наличия рамки у каждой клетки
 	extern int colorFrame[169];			// Массив цветов рамок вокруг квадратов в матрице диапазона
 	extern char text1[100];				// Действие
 	extern char text2[100];				// Позиция
 	extern char text3[100];				// Рука
 	extern std::mutex mutex;			// Мьютекс
+	extern HWND hWnd;					// Окно
 	
-	// Переменные
+	// Рука
 	char hand[10] = "";
 	char hand169[10] = "";
 	char* a_hand169[169];
+
+	// Уникальный идентификатор последней расчитанной ситуации
+	unsigned __int64 calcPlay = 0;
+	int calcRound = 0;
+	double calcPot = 0;
 
 	// Инициализируем переменные
 	GetHand(hand);
@@ -343,6 +411,7 @@ void Preflop()
 	// Никто на префлопе добровольно не вкладывался
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
 	{
+		cls = false;
 		for (int i = 0; i < 169; i++)
 		{
 			// Если рука в счетчике рук входит в диапазон открытия рейзом с этой позиции
@@ -352,11 +421,11 @@ void Preflop()
 				(GetSymbol("InButton")			&& CheckHand169Range(a_hand169[i], OR_BU))	||
 				(GetSymbol("InSmallBlind ")		&& CheckHand169Range(a_hand169[i], OR_SB)))
 			{
-				colorRect[i] = 2; // Светлый квадрат
+				colorRect[i] = 0;	// Светлый квадрат					
 				if (strcmp(a_hand169[i], hand169))
-				{
-					// Красная рамка
-					colorFrame[i] = 2;
+				{	
+					frame[i] = true;
+					colorFrame[i] = 3;	// Красная рамка
 				}
 			}
 			else
@@ -364,12 +433,19 @@ void Preflop()
 				colorRect[i] = 1;	// Темный квадрат
 				if (strcmp(a_hand169[i], hand169))
 				{
-					// Серая рамка
-					colorFrame[i] = 1;
+					frame[i] = true;
+					colorFrame[i] = 4;	// Серая рамка
 				}
 			}
 		}
 	}
+	else
+	{
+		cls = true;
+	}
+
+	// Перерисовываем окно
+	RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE);
 	
 	// Освобождаем мьютекс
 	mutex.unlock();	
