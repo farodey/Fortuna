@@ -15,6 +15,7 @@ char CC_SBvsMP2[] = "QQ-44, AQs+, AQo+";
 char CC_BBvsMP2[] = "QQ-22, ATs+, KQs, JTs, AQo+";
 
 void Preflop();
+void UniqPreflop();
 void RankIntToChar(int rank, char* cRank);
 int  RankCharToInt(char* cRank);
 void Suit(int suit, char* cSuit);

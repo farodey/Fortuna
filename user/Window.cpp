@@ -104,7 +104,7 @@ void InitHand169(char* hand169[])
 	hand169[13] = "AKo";
 	hand169[14] = "KK";
 	hand169[15] = "KQs";
-	hand169[16] = "kJs";
+	hand169[16] = "KJs";
 	hand169[17] = "KTs";
 	hand169[18] = "K9s";
 	hand169[19] = "K9s";
@@ -284,21 +284,25 @@ void InitHand169(char* hand169[])
 void Paint(HDC hdc)
 {
 	// ÷вета
-	COLORREF color0 = RGB(107, 181, 255);	// —ветло-синий	
-	COLORREF color1 = RGB(0, 132, 231);		// “емно-синий
-	COLORREF color2 = RGB(245, 245, 245);	// ѕочти белый (фон в окне)
-	COLORREF color3 = RGB(255, 0, 0);		//  расный
-	COLORREF color4 = RGB(128, 128, 128);	// —ерый
-	COLORREF color5 = RGB(0, 0, 0);			// „ерный
+	COLORREF color0 = RGB(122, 183, 90);	// «еленый	
+	COLORREF color1 = RGB(255, 228, 108);	// ∆елтый
+	COLORREF color2 = RGB(216, 118, 117);	//  расный
+	COLORREF color3 = RGB(245, 245, 245);	// Ѕелый
+	COLORREF color4 = RGB(0, 0, 0);			// „ерный
+	COLORREF color5 = RGB(0, 255, 0);		// ярко-зеленый
+	COLORREF color6 = RGB(255, 255, 0);		// ярко-желтый
+	COLORREF color7 = RGB(255, 0, 0);		// ярко-красный
 
 	//  исти
-	HBRUSH hbr[6];
+	HBRUSH hbr[8];
 	hbr[0] = CreateSolidBrush(color0);
 	hbr[1] = CreateSolidBrush(color1);
 	hbr[2] = CreateSolidBrush(color2);
 	hbr[3] = CreateSolidBrush(color3);
 	hbr[4] = CreateSolidBrush(color4);
 	hbr[5] = CreateSolidBrush(color5);
+	hbr[6] = CreateSolidBrush(color6);
+	hbr[7] = CreateSolidBrush(color7);
 
 	// Ўрифт
 	LOGFONT font;
@@ -333,13 +337,13 @@ void Paint(HDC hdc)
 	{
 		// –исуем пр€моугольник (очистка окна)
 		SetRect(&rect, 0, 0, 400, 400);
-		FillRect(hdc, &rect, hbr[2]);
+		FillRect(hdc, &rect, hbr[3]);
 	}
 	else
 	{
 		// „ерный квадрат - рамка дл€ всей матрицы
 		SetRect(&rect, 10, 10, 10 + 13 * 24 + 1, 10 + 13 * 24 + 1); 
-		FillRect(hdc, &rect, hbr[5]);
+		FillRect(hdc, &rect, hbr[4]);
 			
 		// –исуем диапазон
 		int index_comb = 0;		// »ндекс комбинации в массиве
@@ -347,22 +351,9 @@ void Paint(HDC hdc)
 		{
 			for (int x = 0; x < 13; x++)
 			{
-				if (frame[index_comb])
-				{
-					//  вадрат-рамка (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
-					FillRect(hdc, &rect, hbr[colorFrame[index_comb]]);
-					//  вадрат поменьше (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 24 + 1 + 3, 10 + y * 24 + 1 + 3, 10 + 24 + x * 24 - 3, 10 + 24 + y * 24 - 3);
-					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
-
-				}
-				else
-				{
-					//  вадрат размером с квадрат-рамку (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
-					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
-				}
+				//  вадрат (лева€, верхн€€, права€, нижн€€)
+				SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
+				FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
 
 				// ¬ыводим название комбинации поверх пр€моугольниука
 				SelectObject(hdc, hFont);

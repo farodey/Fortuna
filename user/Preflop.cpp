@@ -375,15 +375,35 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 	return false;
 }
 
-// Стратегия игры на префлопе
+// Ситуация на префлопе
 void Preflop()
+{
+	// Индикатор уже посчитанной ситуации на префлопе
+	static int calsHandNumber = 0;
+	static double calsPot = 0;
+	
+	// Индикатор новой необработанной ситуации на префлопе
+	int handNumber = atoi(GetHandnumber());
+	double pot = GetSymbol("pot");
+
+	if (handNumber != calsHandNumber || pot != calsPot)
+	{
+		// Уникальная ситуация на префлопе
+		UniqPreflop();
+
+		// Обновляем индикатор расчитанной ситуации
+		calsHandNumber = handNumber;
+		calsPot = pot;
+	}
+}
+
+// Уникальная ситуация на префлопе
+void UniqPreflop()
 {
 	// Внешние переменные, синхронизация доступа через мьютекс 
 	extern int colorRect[169];
 	extern bool cls;					// Очистка
 	extern int colorRect[169];			// Массив цветов квадратов в матрице диапазона
-	extern bool frame[169];				// Массив индикаторов наличия рамки у каждой клетки
-	extern int colorFrame[169];			// Массив цветов рамок вокруг квадратов в матрице диапазона
 	extern char text1[100];				// Действие
 	extern char text2[100];				// Позиция
 	extern char text3[100];				// Рука
@@ -416,29 +436,13 @@ void Preflop()
 				(GetSymbol("InButton")			&& CheckHand169Range(a_hand169[i], OR_BU))	||
 				(GetSymbol("InSmallBlind ")		&& CheckHand169Range(a_hand169[i], OR_SB)))
 			{
-				colorRect[i] = 0;	// Светлый квадрат
-				if (!strcmp(a_hand169[i], hand169))
-				{	
-					frame[i] = true;
-					colorFrame[i] = 3;	// Красная рамка
-				}
-				else
-				{
-					frame[i] = false;	// Нет рамки
-				}
+				if (!strcmp(a_hand169[i], hand169)) colorRect[i] = 5;	// Ярко-зеленый квадрат
+				else colorRect[i] = 0;									// Зеленый квадрат
 			}
 			else
 			{
-				colorRect[i] = 1;	// Темный квадрат
-				if (!strcmp(a_hand169[i], hand169))
-				{
-					frame[i] = true;
-					colorFrame[i] = 4;	// Серая рамка
-				}
-				else
-				{
-					frame[i] = false; // Нет рамки
-				}
+				if (!strcmp(a_hand169[i], hand169)) colorRect[i] = 7;	// Ярко-красный квадрат
+				else colorRect[i] = 2;									// Красный квадрат
 		
 			}
 		}
