@@ -289,14 +289,16 @@ void Paint(HDC hdc)
 	COLORREF color2 = RGB(245, 245, 245);	// ѕочти белый (фон в окне)
 	COLORREF color3 = RGB(255, 0, 0);		//  расный
 	COLORREF color4 = RGB(128, 128, 128);	// —ерый
+	COLORREF color5 = RGB(0, 0, 0);			// „ерный
 
 	//  исти
-	HBRUSH hbr[5];
+	HBRUSH hbr[6];
 	hbr[0] = CreateSolidBrush(color0);
 	hbr[1] = CreateSolidBrush(color1);
 	hbr[2] = CreateSolidBrush(color2);
 	hbr[3] = CreateSolidBrush(color3);
 	hbr[4] = CreateSolidBrush(color4);
+	hbr[5] = CreateSolidBrush(color5);
 
 	// Ўрифт
 	LOGFONT font;
@@ -331,10 +333,14 @@ void Paint(HDC hdc)
 	{
 		// –исуем пр€моугольник (очистка окна)
 		SetRect(&rect, 0, 0, 400, 400);
-		FillRect(hdc, &rect, hbr[5]);
+		FillRect(hdc, &rect, hbr[2]);
 	}
 	else
 	{
+		// „ерный квадрат - рамка дл€ всей матрицы
+		SetRect(&rect, 10, 10, 10 + 13 * 24 + 1, 10 + 13 * 24 + 1); 
+		FillRect(hdc, &rect, hbr[5]);
+			
 		// –исуем диапазон
 		int index_comb = 0;		// »ндекс комбинации в массиве
 		for (int y = 0; y < 13; y++)
@@ -344,23 +350,23 @@ void Paint(HDC hdc)
 				if (frame[index_comb])
 				{
 					//  вадрат-рамка (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
+					SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
 					FillRect(hdc, &rect, hbr[colorFrame[index_comb]]);
 					//  вадрат поменьше (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 20 + 2, 10 + y * 20 + 2, 30 + x * 20 - 2, 30 + y * 20 - 2);
+					SetRect(&rect, 10 + x * 24 + 1 + 3, 10 + y * 24 + 1 + 3, 10 + 24 + x * 24 - 3, 10 + 24 + y * 24 - 3);
 					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
 
 				}
 				else
 				{
 					//  вадрат размером с квадрат-рамку (лева€, верхн€€, права€, нижн€€)
-					SetRect(&rect, 10 + x * 20, 10 + y * 20, 30 + x * 20, 30 + y * 20);
+					SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
 					FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
 				}
 
 				// ¬ыводим название комбинации поверх пр€моугольниука
 				SelectObject(hdc, hFont);
-				TextOut(hdc, 10 + x * 20, 10 + y * 20, hand169[index_comb], lstrlen(hand169[index_comb]));
+				TextOut(hdc, 10 + x * 24 + 6, 10 + y * 24 + 9, hand169[index_comb], lstrlen(hand169[index_comb]));
 				index_comb++;
 			}
 		}
