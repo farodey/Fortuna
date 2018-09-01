@@ -378,27 +378,21 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 // Ситуация на префлопе
 void Preflop()
 {
-	// Индикатор уже посчитанной ситуации на префлопе
+	// Первое действие в новой раздаче
 	static int calsHandNumber = 0;
-	static double calsPot = 0;
-	
-	// Индикатор новой необработанной ситуации на префлопе
 	int handNumber = atoi(GetHandnumber());
-	double pot = GetSymbol("pot");
-
-	if (handNumber != calsHandNumber || pot != calsPot)
+	if (handNumber != calsHandNumber &&
+		((!GetSymbol("InBigBlind") && !GetSymbol("InSmallBlind") && GetSymbol("currentbet") == 0) ||
+		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == BB) ||
+		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == SB)))
 	{
-		// Уникальная ситуация на префлопе
-		UniqPreflop();
-
-		// Обновляем индикатор расчитанной ситуации
+		FirstAction();
 		calsHandNumber = handNumber;
-		calsPot = pot;
 	}
 }
 
-// Уникальная ситуация на префлопе
-void UniqPreflop()
+// Наше первое действие в новой раздаче
+void FirstAction()
 {
 	// Внешние переменные, синхронизация доступа через мьютекс 
 	extern int colorRect[169];
@@ -440,6 +434,7 @@ void UniqPreflop()
 				(GetSymbol("InButton") && CheckHand169Range(a_hand169[i], OR_BU)) ||
 				(GetSymbol("InSmallBlind ") && CheckHand169Range(a_hand169[i], OR_SB)))
 			{
+				// Raise
 				if (!strcmp(a_hand169[i], hand169))
 				{
 					// Выводим решение бота
@@ -449,6 +444,56 @@ void UniqPreflop()
 				}
 				else colorRect[i] = 0;
 			}
+			else
+			{
+				// Fold
+				if (!strcmp(a_hand169[i], hand169))
+				{
+					// Выводим решение бота
+					colorRect[i] = 7;
+					colorText1 = 2;
+					strncpy(text1, "Fold", strlen("Fold"));
+				}
+				else colorRect[i] = 2;
+			}
+		}
+	}
+
+	// Перед нами зарейзил один человек	
+	else if (GetSymbol("Calls") == 0 && GetSymbol("nopponentstruelyraising") == 1)
+	{
+		for (int i = 0; i < 169; i++)
+		{
+			cls = false;
+			
+			// 3-BET
+			if ((GetSymbol("InMiddlePosition3") && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_MP3vsMP2)) ||
+				(GetSymbol("InCutOff")          && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_COvsMP2)))
+			{
+				if (!strcmp(a_hand169[i], hand169))
+				{
+					// Выводим решение бота
+					colorRect[i] = 5;
+					colorText1 = 0;
+					strncpy(text1, "Raise", strlen("Raise"));
+				}
+				else colorRect[i] = 0;
+			}
+			
+			// Cold - Call
+			else if ()
+			{
+				if (!strcmp(a_hand169[i], hand169))
+				{
+					// Выводим решение бота
+					colorRect[i] = 7;
+					colorText1 = 2;
+					strncpy(text1, "Fold", strlen("Fold"));
+				}
+				else colorRect[i] = 2;
+			}
+
+			// Fold
 			else
 			{
 				if (!strcmp(a_hand169[i], hand169))
@@ -463,12 +508,6 @@ void UniqPreflop()
 		}
 	}
 
-	// Перед нами зарейзил один человек	
-	else if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 1)
-	{
-
-	}
-
 	// Неизвестная ситуация, очищаем экран
 	else
 	{
@@ -480,4 +519,14 @@ void UniqPreflop()
 
 	// Освобождаем мьютекс
 	mutex.unlock();
+}
+
+bool RaiserMP2()
+{
+
+}
+
+bool RaiserMP3()
+{
+
 }

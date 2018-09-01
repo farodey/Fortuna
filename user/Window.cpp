@@ -32,7 +32,7 @@ DWORD WINAPI WindowThread(LPVOID param)
 
 	// Создать окно
 	hWnd = CreateWindow("FORTUNA", "Fortuna", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, 0, 340, 400, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, 0, 335, 400, NULL, NULL, hInstance, NULL);
 
 	// Показываем и обновляем окно
 	ShowWindow(hWnd, SW_SHOW);
