@@ -405,6 +405,7 @@ void UniqPreflop()
 	extern bool cls;					// Очистка
 	extern int colorRect[169];			// Массив цветов квадратов в матрице диапазона
 	extern char text1[100];				// Действие
+	extern int  colorText1;				// Цвет действия
 	extern char text2[100];				// Позиция
 	extern char text3[100];				// Рука
 	extern std::mutex mutex;			// Мьютекс
@@ -423,60 +424,60 @@ void UniqPreflop()
 	// Блокируем мьютекс
 	mutex.lock();
 
-	// Никто на префлопе добровольно не вкладывался
+	//
+	//  Обрабатываем все вожможные ситуации на префлопе
+	//  Никто добровольно не вкладывался в банк
+	//
 	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
 	{
 		cls = false;
 		for (int i = 0; i < 169; i++)
 		{
 			// Если рука в счетчике рук входит в диапазон открытия рейзом с этой позиции
-			if ((GetSymbol("InMiddlePosition2") && CheckHand169Range(a_hand169[i], OR_MP2))	||
-				(GetSymbol("InMiddlePosition3") && CheckHand169Range(a_hand169[i], OR_MP3))	||
-				(GetSymbol("InCutOff")			&& CheckHand169Range(a_hand169[i], OR_CO))	||
-				(GetSymbol("InButton")			&& CheckHand169Range(a_hand169[i], OR_BU))	||
-				(GetSymbol("InSmallBlind ")		&& CheckHand169Range(a_hand169[i], OR_SB)))
+			if ((GetSymbol("InMiddlePosition2") && CheckHand169Range(a_hand169[i], OR_MP2)) ||
+				(GetSymbol("InMiddlePosition3") && CheckHand169Range(a_hand169[i], OR_MP3)) ||
+				(GetSymbol("InCutOff") && CheckHand169Range(a_hand169[i], OR_CO)) ||
+				(GetSymbol("InButton") && CheckHand169Range(a_hand169[i], OR_BU)) ||
+				(GetSymbol("InSmallBlind ") && CheckHand169Range(a_hand169[i], OR_SB)))
 			{
-				if (!strcmp(a_hand169[i], hand169)) colorRect[i] = 5;	// Ярко-зеленый квадрат
-				else colorRect[i] = 0;									// Зеленый квадрат
+				if (!strcmp(a_hand169[i], hand169))
+				{
+					// Выводим решение бота
+					colorRect[i] = 5;
+					colorText1 = 0;
+					strncpy(text1, "Raise", strlen("Raise"));
+				}
+				else colorRect[i] = 0;
 			}
 			else
 			{
-				if (!strcmp(a_hand169[i], hand169)) colorRect[i] = 7;	// Ярко-красный квадрат
-				else colorRect[i] = 2;									// Красный квадрат
-		
+				if (!strcmp(a_hand169[i], hand169))
+				{
+					// Выводим решение бота
+					colorRect[i] = 7;
+					colorText1 = 2;
+					strncpy(text1, "Fold", strlen("Fold"));
+				}
+				else colorRect[i] = 2;
 			}
 		}
 	}
+
+	// Перед нами зарейзил один человек	
+	else if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 1)
+	{
+
+	}
+
+	// Неизвестная ситуация, очищаем экран
 	else
 	{
 		cls = true;
 	}
-
+	
 	// Перерисовываем окно
 	RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE);
-	
+
 	// Освобождаем мьютекс
-	mutex.unlock();	
+	mutex.unlock();
 }
-
-/*
-
-// Переменные для хранения выводимых данных
-char paintRange[] = "22+, A2s+, K2s+, Q2s+, J2s+, T2s+, 92s+, 82s+, 72s+, 62s+, 52s+, 42s+, 32s, A2o+, K2o+, Q2o+, J2o+, T2o+, 92o+, 82o+, 72o+, 62o+, 52o+, 42o+, 32o";
-char myHand[10] = "";
-char myVarHand[10] = "";
-bool handInRange = false;
-char* actions[3] = { "Raise", "Call", "Fold" };
-
-
-//
-
-
-
-
-
-
-
-
-
-*/

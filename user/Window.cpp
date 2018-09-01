@@ -32,7 +32,7 @@ DWORD WINAPI WindowThread(LPVOID param)
 
 	// Создать окно
 	hWnd = CreateWindow("FORTUNA", "Fortuna", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, 0, 400, 400, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, 0, 340, 400, NULL, NULL, hInstance, NULL);
 
 	// Показываем и обновляем окно
 	ShowWindow(hWnd, SW_SHOW);
@@ -284,25 +284,26 @@ void InitHand169(char* hand169[])
 void Paint(HDC hdc)
 {
 	// Цвета
-	COLORREF color0 = RGB(122, 183, 90);	// Зеленый	
-	COLORREF color1 = RGB(255, 228, 108);	// Желтый
-	COLORREF color2 = RGB(216, 118, 117);	// Красный
-	COLORREF color3 = RGB(245, 245, 245);	// Белый
-	COLORREF color4 = RGB(0, 0, 0);			// Черный
-	COLORREF color5 = RGB(0, 255, 0);		// Ярко-зеленый
-	COLORREF color6 = RGB(255, 255, 0);		// Ярко-желтый
-	COLORREF color7 = RGB(255, 0, 0);		// Ярко-красный
+	COLORREF color[8];
+	color[0] = RGB(122, 183, 90);	// Зеленый	
+	color[1] = RGB(255, 228, 108);	// Желтый
+	color[2] = RGB(216, 118, 117);	// Красный
+	color[3] = RGB(245, 245, 245);	// Белый
+	color[4] = RGB(0, 0, 0);		// Черный
+	color[5] = RGB(0, 255, 0);		// Ярко-зеленый
+	color[6] = RGB(255, 255, 0);	// Ярко-желтый
+	color[7] = RGB(255, 0, 0);		// Ярко-красный
 
 	// Кисти
 	HBRUSH hbr[8];
-	hbr[0] = CreateSolidBrush(color0);
-	hbr[1] = CreateSolidBrush(color1);
-	hbr[2] = CreateSolidBrush(color2);
-	hbr[3] = CreateSolidBrush(color3);
-	hbr[4] = CreateSolidBrush(color4);
-	hbr[5] = CreateSolidBrush(color5);
-	hbr[6] = CreateSolidBrush(color6);
-	hbr[7] = CreateSolidBrush(color7);
+	hbr[0] = CreateSolidBrush(color[0]);
+	hbr[1] = CreateSolidBrush(color[1]);
+	hbr[2] = CreateSolidBrush(color[2]);
+	hbr[3] = CreateSolidBrush(color[3]);
+	hbr[4] = CreateSolidBrush(color[4]);
+	hbr[5] = CreateSolidBrush(color[5]);
+	hbr[6] = CreateSolidBrush(color[6]);
+	hbr[7] = CreateSolidBrush(color[7]);
 
 	// Шрифт
 	LOGFONT font;
@@ -321,6 +322,24 @@ void Paint(HDC hdc)
 	font.lfPitchAndFamily = 0;				// Устанавливает ширину символов и семейство шрифта
 	strcpy_s(font.lfFaceName, "VERDANA");	// Устанавливает название шрифта
 	HFONT hFont = CreateFontIndirect(&font);
+
+	// Шрифт
+	LOGFONT font1;
+	font1.lfHeight = 30;						// Устанавливает высоту шрифта или символа
+	font1.lfWidth = 0;						// Устанавливает среднюю ширину символов в шрифте
+	font1.lfEscapement = 0;					// Устанавливает угол, между вектором наклона и осью X устройства
+	font1.lfOrientation = 0;					// Устанавливает угол, между основной линией каждого символа и осью X устройства
+	font1.lfWeight = 100;					// Устанавливает толщину шрифта в диапазоне от 0 до 1000
+	font1.lfItalic = 0;						// Устанавливает курсивный шрифт
+	font1.lfUnderline = 0;					// Устанавливает подчеркнутый шрифт
+	font1.lfStrikeOut = 0;					// Устанавливает зачеркнутый шрифт
+	font1.lfCharSet = RUSSIAN_CHARSET;		// Устанавливает набор символов
+	font1.lfOutPrecision = 0;				// Устанавливает точность вывода
+	font1.lfClipPrecision = 0;				// Устанавливает точность отсечения
+	font1.lfQuality = 0;						// Устанавливает качество вывода
+	font1.lfPitchAndFamily = 0;				// Устанавливает ширину символов и семейство шрифта
+	strcpy_s(font.lfFaceName, "VERDANA");	// Устанавливает название шрифта
+	HFONT hFont1 = CreateFontIndirect(&font1);
 
 	RECT rect;
 	//COLORREF oldColorFont = SetTextColor(hdc, colorFont);
@@ -342,7 +361,7 @@ void Paint(HDC hdc)
 	else
 	{
 		// Черный квадрат - рамка для всей матрицы
-		SetRect(&rect, 10, 10, 10 + 13 * 24 + 1, 10 + 13 * 24 + 1); 
+		SetRect(&rect, 10, 50, 10 + 13 * 24 + 1, 50 + 13 * 24 + 1); 
 		FillRect(hdc, &rect, hbr[4]);
 			
 		// Рисуем диапазон
@@ -352,15 +371,21 @@ void Paint(HDC hdc)
 			for (int x = 0; x < 13; x++)
 			{
 				// Квадрат (левая, верхняя, правая, нижняя)
-				SetRect(&rect, 10 + x * 24 + 1, 10 + y * 24 + 1, 10 + 24 + x * 24, 10 + 24 + y * 24);
+				SetRect(&rect, 10 + x * 24 + 1, 50 + y * 24 + 1, 10 + 24 + x * 24, 50 + 24 + y * 24);
 				FillRect(hdc, &rect, hbr[colorRect[index_comb]]);
 
 				// Выводим название комбинации поверх прямоугольниука
 				SelectObject(hdc, hFont);
-				TextOut(hdc, 10 + x * 24 + 6, 10 + y * 24 + 9, hand169[index_comb], lstrlen(hand169[index_comb]));
+				SetTextColor(hdc, color[4]);			// Цвет - черный
+				TextOut(hdc, 10 + x * 24 + 6, 50 + y * 24 + 9, hand169[index_comb], strlen(hand169[index_comb]));
 				index_comb++;
 			}
 		}
+
+		// Выводим действие (решение бота)
+		SelectObject(hdc, hFont1);
+		SetTextColor(hdc, color[colorText1]);			// Цвет
+		TextOut(hdc, 10, 10, text1, strlen(text1));		// Текст
 	}
 
 	// Разблокируем мьютекс
