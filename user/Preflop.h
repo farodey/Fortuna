@@ -58,7 +58,7 @@ char TB_BBvsCO[] = "QQ+, AQs+, A5s-A4s, K9s, Q9s, J9s, T8s, 97s+, 86s+, 76s, 65s
 
 // vs BU
 char TB_SBvsBU[] = "JJ+, 66-44, AQs+, A8s-A2s, K9s-K5s, QTs-Q8s, J9s-J8s, T8s+, 97s+, 86s+, 76s, 65s, 54s, AQo+";
-char TB_BBvsBB[] = "JJ+, AJs+, K4s-K2s, Q6s-Q2s, J6s, T7s, 97s-96s, 86s-85s, 75s+, 64s+, 53s+, 43s, AQo+";
+char TB_BBvsBU[] = "JJ+, AJs+, K4s-K2s, Q6s-Q2s, J6s, T7s, 97s-96s, 86s-85s, 75s+, 64s+, 53s+, 43s, AQo+";
 
 // vs SB
 char TB_BBvsSB[] = "TT+, AJs+, K4s-K2s, Q5s-Q2s, J6s, T6s, 96s, 85s, 74s, 64s, AQo+, A4o-A2o, K7o-K5o, Q8o";

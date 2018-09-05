@@ -375,7 +375,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 	return false;
 }
 
-// Ситуация на префлопе
+// Префлоп
 void Preflop()
 {
 	// Первое действие в новой раздаче
@@ -383,9 +383,11 @@ void Preflop()
 	int handNumber = atoi(GetHandnumber());
 	if (handNumber != calsHandNumber &&
 		((!GetSymbol("InBigBlind") && !GetSymbol("InSmallBlind") && GetSymbol("currentbet") == 0) ||
-		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == BB) ||
-		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == SB)))
+		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == GetSymbol("bblind ")) ||
+		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == GetSymbol("sblind "))))
 	{
+		
+		// Первое действие на префлопе
 		FirstAction();
 		calsHandNumber = handNumber;
 	}
@@ -419,10 +421,9 @@ void FirstAction()
 	mutex.lock();
 
 	//
-	//  Обрабатываем все вожможные ситуации на префлопе
-	//  Никто добровольно не вкладывался в банк
+	//  Никто добровольно не вкладывался в банк (Open Raise)
 	//
-	if (!GetSymbol("InBigBlind") && GetSymbol("Raises") == 0 && RightCalls() == 0)
+	if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 0)
 	{
 		cls = false;
 		for (int i = 0; i < 169; i++)
@@ -459,16 +460,34 @@ void FirstAction()
 		}
 	}
 
-	// Перед нами зарейзил один человек	
-	else if (GetSymbol("Calls") == 0 && GetSymbol("nopponentstruelyraising") == 1)
+	//
+	// Перед нами был один рейз
+	//
+	else if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 1)
 	{
+		cls = false;
 		for (int i = 0; i < 169; i++)
 		{
-			cls = false;
-			
 			// 3-BET
-			if ((GetSymbol("InMiddlePosition3") && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_MP3vsMP2)) ||
-				(GetSymbol("InCutOff")          && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_COvsMP2)))
+			if ((GetSymbol("InMiddlePosition3") && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_MP3vsMP2)) ||
+				(GetSymbol("InCutOff")          && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_COvsMP2))  ||
+				(GetSymbol("InButton")          && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_BUvsMP2))  ||
+				(GetSymbol("InSmallBlind")      && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_SBvsMP2))  ||
+				(GetSymbol("InBigBlind")        && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_BBvsMP2))  ||
+
+				(GetSymbol("InCutOff")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_COvsMP3))  ||
+				(GetSymbol("InButton")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_BUvsMP3))  ||
+				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_SBvsMP3))  ||
+				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_BBvsMP3))  ||
+
+				(GetSymbol("InButton")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_BUvsCO))    ||
+				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_SBvsCO))    ||
+				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_BBvsCO))    ||
+
+				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], TB_SBvsBU))    ||
+				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], TB_BBvsBU))    ||
+
+				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 1 && CheckHand169Range(a_hand169[i], TB_BBvsSB)))
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
@@ -481,16 +500,34 @@ void FirstAction()
 			}
 			
 			// Cold - Call
-			else if ()
+			else if ((GetSymbol("InMiddlePosition3")	&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_MP3vsMP2)) ||
+					(GetSymbol("InCutOff")				&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_COvsMP2))  ||
+					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_BUvsMP2))  ||
+					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_SBvsMP2))  ||
+					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_BBvsMP2))  ||
+
+					(GetSymbol("InCutOff")				&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_COvsMP3)) ||
+					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_BUvsMP3)) ||
+					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_SBvsMP3)) ||
+					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_BBvsMP3)) ||
+
+					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_BUvsCO)) ||
+					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_SBvsCO)) ||
+					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_BBvsCO)) ||
+
+					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], CC_SBvsBU)) ||
+					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], CC_BBvsBU)) ||
+
+					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 1 && CheckHand169Range(a_hand169[i], CC_BBvsSB)))
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
 					// Выводим решение бота
-					colorRect[i] = 7;
-					colorText1 = 2;
-					strncpy(text1, "Fold", strlen("Fold"));
+					colorRect[i] = 6;
+					colorText1 = 1;
+					strncpy(text1, "Call", strlen("Call"));
 				}
-				else colorRect[i] = 2;
+				else colorRect[i] = 1;
 			}
 
 			// Fold
@@ -519,14 +556,4 @@ void FirstAction()
 
 	// Освобождаем мьютекс
 	mutex.unlock();
-}
-
-bool RaiserMP2()
-{
-
-}
-
-bool RaiserMP3()
-{
-
 }
