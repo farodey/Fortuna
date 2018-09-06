@@ -59,7 +59,7 @@ int RankCharToInt(char* cRank)
 		x = 14;
 		break;
 	case 'K':
-		x = 12;
+		x = 13;
 		break;
 	case 'Q':
 		x = 12;
@@ -250,7 +250,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 					return false;
 				}
 			}
-			else if (subrange[2] == ',')
+			else if (subrange[2] == ',' || subrange[2] == 0)
 			{
 				if (RankCharToInt(subrange) == RankCharToInt(hand169))
 				{
@@ -263,7 +263,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 			}
 			else if (subrange[2] == '-')
 			{
-				if (RankCharToInt(subrange) <= RankCharToInt(hand169) && RankCharToInt(subrange + 3) >= RankCharToInt(hand169))
+				if (RankCharToInt(hand169) <= RankCharToInt(subrange) && RankCharToInt(hand169) >= RankCharToInt(subrange + 3))
 				{
 					return true;
 				}
@@ -297,9 +297,9 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 					return false;
 				}
 			}
-			else if (subrange[3] == ',')
+			else if (subrange[3] == ',' || subrange[3] == 0)
 			{
-				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) == RankCharToInt(hand169 + 1))
+				if ((RankCharToInt(subrange) == RankCharToInt(hand169)) && (RankCharToInt(subrange + 1) == RankCharToInt(hand169 + 1)))
 				{
 					return true;
 				}
@@ -310,7 +310,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 			}
 			else if (subrange[3] == '-')
 			{
-				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(hand169 + 1) <= RankCharToInt(subrange + 1) && RankCharToInt(hand169 + 1) >= RankCharToInt(subrange + 5))
 				{
 					return true;
 				}
@@ -344,7 +344,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 					return false;
 				}
 			}
-			else if (subrange[3] == ',')
+			else if (subrange[3] == ',' || subrange[3] == 0)
 			{
 				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) == RankCharToInt(hand169 + 1))
 				{
@@ -357,7 +357,7 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 			}
 			else if (subrange[3] == '-')
 			{
-				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(subrange + 1) <= RankCharToInt(hand169 + 1))
+				if (RankCharToInt(subrange) == RankCharToInt(hand169) && RankCharToInt(hand169 + 1) <= RankCharToInt(subrange + 1) && RankCharToInt(hand169 + 1) >= RankCharToInt(subrange + 5))
 				{
 					return true;
 				}
@@ -467,27 +467,27 @@ void FirstAction()
 	{
 		cls = false;
 		for (int i = 0; i < 169; i++)
-		{
+		{	
 			// 3-BET
-			if ((GetSymbol("InMiddlePosition3") && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_MP3vsMP2)) ||
-				(GetSymbol("InCutOff")          && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_COvsMP2))  ||
-				(GetSymbol("InButton")          && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_BUvsMP2))  ||
-				(GetSymbol("InSmallBlind")      && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_SBvsMP2))  ||
-				(GetSymbol("InBigBlind")        && GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], TB_BBvsMP2))  ||
+			if ((GetSymbol("InMiddlePosition3") && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_MP3vsMP2)) ||
+				(GetSymbol("InCutOff")          && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_COvsMP2))  ||
+				(GetSymbol("InButton")          && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_BUvsMP2))  ||
+				(GetSymbol("InSmallBlind")      && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_SBvsMP2))  ||
+				(GetSymbol("InBigBlind")        && RaiserMP2() && CheckHand169Range(a_hand169[i], TB_BBvsMP2))  ||
 
-				(GetSymbol("InCutOff")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_COvsMP3))  ||
-				(GetSymbol("InButton")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_BUvsMP3))  ||
-				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_SBvsMP3))  ||
-				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], TB_BBvsMP3))  ||
+				(GetSymbol("InCutOff")			&& RaiserMP3() && CheckHand169Range(a_hand169[i], TB_COvsMP3))  ||
+				(GetSymbol("InButton")			&& RaiserMP3() && CheckHand169Range(a_hand169[i], TB_BUvsMP3))  ||
+				(GetSymbol("InSmallBlind")		&& RaiserMP3() && CheckHand169Range(a_hand169[i], TB_SBvsMP3))  ||
+				(GetSymbol("InBigBlind")		&& RaiserMP3() && CheckHand169Range(a_hand169[i], TB_BBvsMP3))  ||
 
-				(GetSymbol("InButton")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_BUvsCO))    ||
-				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_SBvsCO))    ||
-				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], TB_BBvsCO))    ||
+				(GetSymbol("InButton")			&& RaiserCO() && CheckHand169Range(a_hand169[i], TB_BUvsCO))    ||
+				(GetSymbol("InSmallBlind")		&& RaiserCO() && CheckHand169Range(a_hand169[i], TB_SBvsCO))    ||
+				(GetSymbol("InBigBlind")		&& RaiserCO() && CheckHand169Range(a_hand169[i], TB_BBvsCO))    ||
 
-				(GetSymbol("InSmallBlind")		&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], TB_SBvsBU))    ||
-				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], TB_BBvsBU))    ||
+				(GetSymbol("InSmallBlind")		&& RaiserBU() && CheckHand169Range(a_hand169[i], TB_SBvsBU))    ||
+				(GetSymbol("InBigBlind")		&& RaiserBU() && CheckHand169Range(a_hand169[i], TB_BBvsBU))    ||
 
-				(GetSymbol("InBigBlind")		&& GetSymbol("betpositionrais") == 1 && CheckHand169Range(a_hand169[i], TB_BBvsSB)))
+				(GetSymbol("InBigBlind")		&& RaiserSB() && CheckHand169Range(a_hand169[i], TB_BBvsSB)))
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
@@ -500,25 +500,25 @@ void FirstAction()
 			}
 			
 			// Cold - Call
-			else if ((GetSymbol("InMiddlePosition3")	&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_MP3vsMP2)) ||
-					(GetSymbol("InCutOff")				&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_COvsMP2))  ||
-					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_BUvsMP2))  ||
-					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_SBvsMP2))  ||
-					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 3 && CheckHand169Range(a_hand169[i], CC_BBvsMP2))  ||
+			else if ((GetSymbol("InMiddlePosition3")	&& RaiserMP2() && CheckHand169Range(a_hand169[i], CC_MP3vsMP2)) ||
+					(GetSymbol("InCutOff")				&& RaiserMP2() && CheckHand169Range(a_hand169[i], CC_COvsMP2))  ||
+					(GetSymbol("InButton")				&& RaiserMP2() && CheckHand169Range(a_hand169[i], CC_BUvsMP2))  ||
+					(GetSymbol("InSmallBlind")			&& RaiserMP2() && CheckHand169Range(a_hand169[i], CC_SBvsMP2))  ||
+					(GetSymbol("InBigBlind")			&& RaiserMP2() && CheckHand169Range(a_hand169[i], CC_BBvsMP2))  ||
 
-					(GetSymbol("InCutOff")				&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_COvsMP3)) ||
-					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_BUvsMP3)) ||
-					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_SBvsMP3)) ||
-					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 4 && CheckHand169Range(a_hand169[i], CC_BBvsMP3)) ||
+					(GetSymbol("InCutOff")				&& RaiserMP3() && CheckHand169Range(a_hand169[i], CC_COvsMP3)) ||
+					(GetSymbol("InButton")				&& RaiserMP3() && CheckHand169Range(a_hand169[i], CC_BUvsMP3)) ||
+					(GetSymbol("InSmallBlind")			&& RaiserMP3() && CheckHand169Range(a_hand169[i], CC_SBvsMP3)) ||
+					(GetSymbol("InBigBlind")			&& RaiserMP3() && CheckHand169Range(a_hand169[i], CC_BBvsMP3)) ||
 
-					(GetSymbol("InButton")				&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_BUvsCO)) ||
-					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_SBvsCO)) ||
-					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 5 && CheckHand169Range(a_hand169[i], CC_BBvsCO)) ||
+					(GetSymbol("InButton")				&& RaiserCO() && CheckHand169Range(a_hand169[i], CC_BUvsCO)) ||
+					(GetSymbol("InSmallBlind")			&& RaiserCO() && CheckHand169Range(a_hand169[i], CC_SBvsCO)) ||
+					(GetSymbol("InBigBlind")			&& RaiserCO() && CheckHand169Range(a_hand169[i], CC_BBvsCO)) ||
 
-					(GetSymbol("InSmallBlind")			&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], CC_SBvsBU)) ||
-					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 6 && CheckHand169Range(a_hand169[i], CC_BBvsBU)) ||
+					(GetSymbol("InSmallBlind")			&& RaiserBU() && CheckHand169Range(a_hand169[i], CC_SBvsBU)) ||
+					(GetSymbol("InBigBlind")			&& RaiserBU() && CheckHand169Range(a_hand169[i], CC_BBvsBU)) ||
 
-					(GetSymbol("InBigBlind")			&& GetSymbol("betpositionrais") == 1 && CheckHand169Range(a_hand169[i], CC_BBvsSB)))
+					(GetSymbol("InBigBlind")			&& RaiserSB() && CheckHand169Range(a_hand169[i], CC_BBvsSB)))
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
@@ -556,4 +556,94 @@ void FirstAction()
 
 	// Освобождаем мьютекс
 	mutex.unlock();
+}
+
+int UserPosition()
+{
+	if (GetSymbol("InMiddlePosition2"))
+	{
+		return 5;
+	}
+	else if (GetSymbol("InMiddlePosition3"))
+	{
+		return 4;
+	}
+	else if (GetSymbol("InCutOff"))
+	{
+		return 3;
+	}
+	else if (GetSymbol("InButton"))
+	{
+		return 2;
+	}
+	else if (GetSymbol("InSmallBlind"))
+	{
+		return 1;
+	}
+	else if (GetSymbol("InBigBlind"))
+	{
+		return 0;
+	}
+	return 0;
+}
+
+bool RaiserMP2()
+{
+	if (UserPosition() + RightChairs() == 5) return true;
+	else return false;
+}
+
+bool RaiserMP3()
+{
+	if (UserPosition() + RightChairs() == 4) return true;
+	else return false;
+}
+
+bool RaiserCO()
+{
+	if (UserPosition() + RightChairs() == 3) return true;
+	else return false;
+}
+
+bool RaiserBU()
+{
+	if (UserPosition() + RightChairs() == 2) return true;
+	else return false;
+}
+
+bool RaiserSB()
+{
+	if (UserPosition() + RightChairs() == 1) return true;
+	else return false;
+}
+
+int DecChair(int chair)
+{
+	if (chair == 0) chair = 5;
+	else chair--;
+	return chair;
+}
+
+double CurrentBet(int chair)
+{
+	if (chair == 0) return GetSymbol("currentbet0");
+	else if (chair == 1) return GetSymbol("currentbet1");
+	else if (chair == 2) return GetSymbol("currentbet2");
+	else if (chair == 3) return GetSymbol("currentbet3");
+	else if (chair == 4) return GetSymbol("currentbet4");
+	else if (chair == 5) return GetSymbol("currentbet5");
+	return 0;
+}
+
+int RightChairs()
+{
+	int i_chair = GetSymbol("userchair");
+	int count = 0;
+	do
+	{
+		i_chair = DecChair(i_chair);
+		count++;
+
+	} while (CurrentBet(i_chair) <= GetSymbol("bblind"));
+	return count;
 }

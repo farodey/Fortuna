@@ -86,7 +86,7 @@ UTG vs 3b 4bet OOP AhAs, AhAc, AsAc, KhKs, KhKc, KsKc, AJs - ATs, AQo
 */
 
 void Preflop();
-void UniqPreflop();
+void FirstAction();
 void RankIntToChar(int rank, char* cRank);
 int  RankCharToInt(char* cRank);
 void Suit(int suit, char* cSuit);
@@ -98,3 +98,13 @@ int RightCalls();
 bool CheckHand169Range(char* hand169, char* range);
 bool CheckHand169Subrange(char* hand169, char* subrange);
 int ReadSubrange(char* inputRange, char* outputSubrange);
+
+int RightChairs();
+double CurrentBet(int chair);
+int DecChair(int chair);
+bool RaiserSB();
+bool RaiserBU();
+bool RaiserCO();
+bool RaiserMP3();
+bool RaiserMP2();
+int UserPosition();
