@@ -133,24 +133,40 @@ void GetHand(char* hand)
 // Конвертация hand в hand169
 void HandToHand169(char* hand, char* hand169)
 {
-	if (hand[0] == hand[2])
+	char temp_hand[10];
+	char temp_char = 0;
+	strcpy(temp_hand, hand);
+	
+	if (RankCharToInt(temp_hand) < RankCharToInt(temp_hand + 2))
 	{
-		hand169[0] = hand[0];
-		hand169[1] = hand[0];
+		// Меняем ранг карты
+		temp_char = temp_hand[0];
+		temp_hand[0] = temp_hand[2];
+		temp_hand[2] = temp_char;
+
+		// Меняем масти
+		temp_char = temp_hand[1];
+		temp_hand[1] = temp_hand[3];
+		temp_hand[3] = temp_char;
 	}
-	else if (hand[1] == hand[3])
+	
+	if (temp_hand[0] == temp_hand[2])
 	{
-		hand169[0] = hand[0];
-		hand169[1] = hand[2];
+		hand169[0] = temp_hand[0];
+		hand169[1] = temp_hand[0];
+	}
+	else if (temp_hand[1] == temp_hand[3])
+	{
+		hand169[0] = temp_hand[0];
+		hand169[1] = temp_hand[2];
 		hand169[2] = 's';
 	}
-	else if (hand[1] != hand[3])
+	else if (temp_hand[1] != temp_hand[3])
 	{
-		hand169[0] = hand[0];
-		hand169[1] = hand[2];
+		hand169[0] = temp_hand[0];
+		hand169[1] = temp_hand[2];
 		hand169[2] = 'o';
 	}
-
 }
 
 // Сдвиг вправо по кругу
@@ -378,18 +394,14 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 // Префлоп
 void Preflop()
 {
-	// Первое действие в новой раздаче
-	static int calsHandNumber = 0;
-	int handNumber = atoi(GetHandnumber());
-	if (handNumber != calsHandNumber &&
-		((!GetSymbol("InBigBlind") && !GetSymbol("InSmallBlind") && GetSymbol("currentbet") == 0) ||
-		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == GetSymbol("bblind ")) ||
-		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == GetSymbol("sblind "))))
+	// Первое действие
+	if ((!GetSymbol("InBigBlind") && !GetSymbol("InSmallBlind") && GetSymbol("currentbet") == 0) ||
+		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == GetSymbol("bblind")) ||
+		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == GetSymbol("sblind")))
 	{
 		
 		// Первое действие на префлопе
 		FirstAction();
-		calsHandNumber = handNumber;
 	}
 }
 
