@@ -493,7 +493,7 @@ void FirstAction()
 				{
 					// Выводим решение бота
 					colorRect[i] = 5;
-					colorText1 = 0;
+					colorText1 = 5;
 					strncpy(text1, "Raise", strlen("Raise"));
 				}
 				else colorRect[i] = 0;
@@ -524,7 +524,7 @@ void FirstAction()
 				{
 					// Выводим решение бота
 					colorRect[i] = 6;
-					colorText1 = 1;
+					colorText1 = 6;
 					strncpy(text1, "Call", strlen("Call"));
 				}
 				else colorRect[i] = 1;
@@ -537,7 +537,7 @@ void FirstAction()
 				{
 					// Выводим решение бота
 					colorRect[i] = 7;
-					colorText1 = 2;
+					colorText1 = 7;
 					strncpy(text1, "Fold", strlen("Fold"));
 				}
 				else colorRect[i] = 2;
