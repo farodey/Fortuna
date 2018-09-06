@@ -52,7 +52,7 @@ char TB_SBvsMP3[] = "KK+, AKs, JTs, T8s+, 98s, 87s";
 char TB_BBvsMP3[] = "KK+, T8s+, 98s, 87s, 76s";
 
 // vs CO
-char TB_BUvsCO[] = "JJ+, AQs+ , A8s-A2s, K9s-K6s, Q9s-Q8s, J8s-J7s, 97s, 86s, AKo, ATo-A9o, KJo-KTo, QJo";
+char TB_BUvsCO[] = "JJ+, AQs+, A8s-A2s, K9s-K6s, Q9s-Q8s, J8s-J7s, 97s, 86s, AKo, ATo-A9o, KJo-KTo, QJo";
 char TB_SBvsCO[] = "JJ+, 55-22, AQs+, KTs, QTs, J9s+, T8s+, 97s+, 87s, 76s, 65s, 54s, AKo";
 char TB_BBvsCO[] = "QQ+, AQs+, A5s-A4s, K9s, Q9s, J9s, T8s, 97s+, 86s+, 76s, 65s, 54s, AKo";
 
