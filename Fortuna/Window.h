@@ -1,14 +1,14 @@
 #pragma once
 
-// Состояние рендера
-bool cls = true;					// Индикатор очистки экрана
-int colorRect[169];					// Массив цветов квадратов в матрице диапазона
-char text1[100] = "";				// Действие
-int colorText1;						// Цвет действия
-char text2[100] = "";				// Позиция
-char text3[100] = "" ;				// Рука
-std::mutex mutex;					// Мьютекс
-HWND hWnd;							// Окно
+// РЎРѕСЃС‚РѕСЏРЅРёРµ СЂРµРЅРґРµСЂР°
+bool cls = true;					// РРЅРґРёРєР°С‚РѕСЂ РѕС‡РёСЃС‚РєРё СЌРєСЂР°РЅР°
+int colorRect[169];					// РњР°СЃСЃРёРІ С†РІРµС‚РѕРІ РєРІР°РґСЂР°С‚РѕРІ РІ РјР°С‚СЂРёС†Рµ РґРёР°РїР°Р·РѕРЅР°
+char text1[100] = "";				// Р”РµР№СЃС‚РІРёРµ
+int colorText1;						// Р¦РІРµС‚ РґРµР№СЃС‚РІРёСЏ
+char text2[100] = "";				// РџРѕР·РёС†РёСЏ
+char text3[100] = "" ;				// Р СѓРєР°
+std::mutex mutex;					// РњСЊСЋС‚РµРєСЃ
+HWND hWnd;							// РћРєРЅРѕ
 
 void Window(HANDLE hModule);
 DWORD WINAPI WindowThread(LPVOID param);

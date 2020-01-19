@@ -3,7 +3,7 @@
 #include "OpenHoldemFunctions.h"
 #include "Preflop.h"
 
-// Ранг карты
+// Р Р°РЅРі РєР°СЂС‚С‹
 void RankIntToChar(int rank, char* cRank)
 {
 	switch (rank)
@@ -98,7 +98,7 @@ int RankCharToInt(char* cRank)
 	return x;
 }
 
-// Масть карты
+// РњР°СЃС‚СЊ РєР°СЂС‚С‹
 void Suit(int suit, char* cSuit)
 {
 	switch (suit)
@@ -121,7 +121,7 @@ void Suit(int suit, char* cSuit)
 	}
 }
 
-// Наша рука
+// РќР°С€Р° СЂСѓРєР°
 void GetHand(char* hand)
 {
 	RankIntToChar(GetSymbol("$$pr0"), hand);
@@ -130,7 +130,7 @@ void GetHand(char* hand)
 	Suit(GetSymbol("$$ps1"), hand + 3);
 }
 
-// Конвертация hand в hand169
+// РљРѕРЅРІРµСЂС‚Р°С†РёСЏ hand РІ hand169
 void HandToHand169(char* hand, char* hand169)
 {
 	char temp_hand[10];
@@ -139,12 +139,12 @@ void HandToHand169(char* hand, char* hand169)
 	
 	if (RankCharToInt(temp_hand) < RankCharToInt(temp_hand + 2))
 	{
-		// Меняем ранг карты
+		// РњРµРЅСЏРµРј СЂР°РЅРі РєР°СЂС‚С‹
 		temp_char = temp_hand[0];
 		temp_hand[0] = temp_hand[2];
 		temp_hand[2] = temp_char;
 
-		// Меняем масти
+		// РњРµРЅСЏРµРј РјР°СЃС‚Рё
 		temp_char = temp_hand[1];
 		temp_hand[1] = temp_hand[3];
 		temp_hand[3] = temp_char;
@@ -169,7 +169,7 @@ void HandToHand169(char* hand, char* hand169)
 	}
 }
 
-// Сдвиг вправо по кругу
+// РЎРґРІРёРі РІРїСЂР°РІРѕ РїРѕ РєСЂСѓРіСѓ
 unsigned int Rotr(unsigned int value, unsigned int size, unsigned int count)
 {
 	unsigned int temp = 0;
@@ -182,7 +182,7 @@ unsigned int Rotr(unsigned int value, unsigned int size, unsigned int count)
 	return value;
 }
 
-// Битовая маска коллеров от BB до игрока
+// Р‘РёС‚РѕРІР°СЏ РјР°СЃРєР° РєРѕР»Р»РµСЂРѕРІ РѕС‚ BB РґРѕ РёРіСЂРѕРєР°
 int RightCalls()
 {
 	int call = GetSymbol("callbits1");
@@ -198,9 +198,9 @@ int RightCalls()
 }
 
 //
-//  Считывает диапазон комбинаций до запятой или до конца строки
-//  Учитывает пробел в начале комбинации
-//  return число считанных символов
+//  РЎС‡РёС‚С‹РІР°РµС‚ РґРёР°РїР°Р·РѕРЅ РєРѕРјР±РёРЅР°С†РёР№ РґРѕ Р·Р°РїСЏС‚РѕР№ РёР»Рё РґРѕ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё
+//  РЈС‡РёС‚С‹РІР°РµС‚ РїСЂРѕР±РµР» РІ РЅР°С‡Р°Р»Рµ РєРѕРјР±РёРЅР°С†РёРё
+//  return С‡РёСЃР»Рѕ СЃС‡РёС‚Р°РЅРЅС‹С… СЃРёРјРІРѕР»РѕРІ
 //
 int ReadSubrange(char* inputRange, char* outputSubrange)
 {
@@ -234,12 +234,12 @@ bool CheckHand169Range(char* hand169, char* range)
 	{
 		if (CheckHand169Subrange(hand169, subrange))
 		{
-			// Рука входит в диапазон
+			// Р СѓРєР° РІС…РѕРґРёС‚ РІ РґРёР°РїР°Р·РѕРЅ
 			return true;
 		}
 		else
 		{
-			// Сдвигаем указатель для следующего чтения поддиапазона
+			// РЎРґРІРёРіР°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ С‡С‚РµРЅРёСЏ РїРѕРґРґРёР°РїР°Р·РѕРЅР°
 			pRange = pRange + ReadSubrange(pRange, subrange) + 2;
 		}
 	}
@@ -248,10 +248,10 @@ bool CheckHand169Range(char* hand169, char* range)
 
 bool CheckHand169Subrange(char* hand169, char* subrange)
 {
-	// Пара
+	// РџР°СЂР°
 	if (hand169[0] == hand169[1])
 	{
-		// Если в поддиапазоне тоже пара
+		// Р•СЃР»Рё РІ РїРѕРґРґРёР°РїР°Р·РѕРЅРµ С‚РѕР¶Рµ РїР°СЂР°
 		if (subrange[0] == subrange[1])
 		{
 			
@@ -295,10 +295,10 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 		}
 	}
 	
-	// Одномастная комбинация
+	// РћРґРЅРѕРјР°СЃС‚РЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ
 	else if (hand169[2] == 's')
 	{
-		// Если в поддиапазоне тоже одномастная комбинация
+		// Р•СЃР»Рё РІ РїРѕРґРґРёР°РїР°Р·РѕРЅРµ С‚РѕР¶Рµ РѕРґРЅРѕРјР°СЃС‚РЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ
 		if (subrange[2] == 's')
 		{
 
@@ -342,10 +342,10 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 		}
 	}
 
-	// Разномастная комбинация
+	// Р Р°Р·РЅРѕРјР°СЃС‚РЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ
 	else if (hand169[2] == 'o')
 	{
-		// Если в поддиапазоне тоже разномастная комбинация
+		// Р•СЃР»Рё РІ РїРѕРґРґРёР°РїР°Р·РѕРЅРµ С‚РѕР¶Рµ СЂР°Р·РЅРѕРјР°СЃС‚РЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ
 		if (subrange[2] == 'o')
 		{
 
@@ -391,56 +391,56 @@ bool CheckHand169Subrange(char* hand169, char* subrange)
 	return false;
 }
 
-// Префлоп
+// РџСЂРµС„Р»РѕРї
 void Preflop()
 {
-	// Первое действие
+	// РџРµСЂРІРѕРµ РґРµР№СЃС‚РІРёРµ
 	if ((!GetSymbol("InBigBlind") && !GetSymbol("InSmallBlind") && GetSymbol("currentbet") == 0) ||
 		(GetSymbol("InBigBlind")   && GetSymbol("currentbet") == GetSymbol("bblind")) ||
 		(GetSymbol("InSmallBlind") && GetSymbol("currentbet") == GetSymbol("sblind")))
 	{
 		
-		// Первое действие на префлопе
+		// РџРµСЂРІРѕРµ РґРµР№СЃС‚РІРёРµ РЅР° РїСЂРµС„Р»РѕРїРµ
 		FirstAction();
 	}
 }
 
-// Наше первое действие в новой раздаче
+// РќР°С€Рµ РїРµСЂРІРѕРµ РґРµР№СЃС‚РІРёРµ РІ РЅРѕРІРѕР№ СЂР°Р·РґР°С‡Рµ
 void FirstAction()
 {
-	// Внешние переменные, синхронизация доступа через мьютекс 
+	// Р’РЅРµС€РЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ, СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РґРѕСЃС‚СѓРїР° С‡РµСЂРµР· РјСЊСЋС‚РµРєСЃ 
 	extern int colorRect[169];
-	extern bool cls;					// Очистка
-	extern int colorRect[169];			// Массив цветов квадратов в матрице диапазона
-	extern char text1[100];				// Действие
-	extern int  colorText1;				// Цвет действия
-	extern char text2[100];				// Позиция
-	extern char text3[100];				// Рука
-	extern std::mutex mutex;			// Мьютекс
-	extern HWND hWnd;					// Окно
+	extern bool cls;					// РћС‡РёСЃС‚РєР°
+	extern int colorRect[169];			// РњР°СЃСЃРёРІ С†РІРµС‚РѕРІ РєРІР°РґСЂР°С‚РѕРІ РІ РјР°С‚СЂРёС†Рµ РґРёР°РїР°Р·РѕРЅР°
+	extern char text1[100];				// Р”РµР№СЃС‚РІРёРµ
+	extern int  colorText1;				// Р¦РІРµС‚ РґРµР№СЃС‚РІРёСЏ
+	extern char text2[100];				// РџРѕР·РёС†РёСЏ
+	extern char text3[100];				// Р СѓРєР°
+	extern std::mutex mutex;			// РњСЊСЋС‚РµРєСЃ
+	extern HWND hWnd;					// РћРєРЅРѕ
 	
-	// Рука
+	// Р СѓРєР°
 	char hand[10] = "";
 	char hand169[10] = "";
 	char* a_hand169[169];
 	
-	// Инициализируем переменные
+	// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РїРµСЂРµРјРµРЅРЅС‹Рµ
 	GetHand(hand);
 	HandToHand169(hand, hand169);
 	InitHand169(a_hand169);
 
-	// Блокируем мьютекс
+	// Р‘Р»РѕРєРёСЂСѓРµРј РјСЊСЋС‚РµРєСЃ
 	mutex.lock();
 
 	//
-	//  Никто добровольно не вкладывался в банк (Open Raise)
+	//  РќРёРєС‚Рѕ РґРѕР±СЂРѕРІРѕР»СЊРЅРѕ РЅРµ РІРєР»Р°РґС‹РІР°Р»СЃСЏ РІ Р±Р°РЅРє (Open Raise)
 	//
 	if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 0)
 	{
 		cls = false;
 		for (int i = 0; i < 169; i++)
 		{
-			// Если рука в счетчике рук входит в диапазон открытия рейзом с этой позиции
+			// Р•СЃР»Рё СЂСѓРєР° РІ СЃС‡РµС‚С‡РёРєРµ СЂСѓРє РІС…РѕРґРёС‚ РІ РґРёР°РїР°Р·РѕРЅ РѕС‚РєСЂС‹С‚РёСЏ СЂРµР№Р·РѕРј СЃ СЌС‚РѕР№ РїРѕР·РёС†РёРё
 			if ((GetSymbol("InMiddlePosition2") && CheckHand169Range(a_hand169[i], OR_MP2)) ||
 				(GetSymbol("InMiddlePosition3") && CheckHand169Range(a_hand169[i], OR_MP3)) ||
 				(GetSymbol("InCutOff") && CheckHand169Range(a_hand169[i], OR_CO)) ||
@@ -450,7 +450,7 @@ void FirstAction()
 				// Raise
 				if (!strcmp(a_hand169[i], hand169))
 				{
-					// Выводим решение бота
+					// Р’С‹РІРѕРґРёРј СЂРµС€РµРЅРёРµ Р±РѕС‚Р°
 					colorRect[i] = 5;
 					colorText1 = 0;
 					strncpy(text1, "Raise", strlen("Raise") + 1);
@@ -462,7 +462,7 @@ void FirstAction()
 				// Fold
 				if (!strcmp(a_hand169[i], hand169))
 				{
-					// Выводим решение бота
+					// Р’С‹РІРѕРґРёРј СЂРµС€РµРЅРёРµ Р±РѕС‚Р°
 					colorRect[i] = 7;
 					colorText1 = 2;
 					strncpy(text1, "Fold", strlen("Fold") + 1);
@@ -471,12 +471,12 @@ void FirstAction()
 			}
 		}
 
-		// Выводим позицию
+		// Р’С‹РІРѕРґРёРј РїРѕР·РёС†РёСЋ
 		strncpy(text2, "", strlen("") + 1);
 	}
 
 	//
-	// Перед нами был один рейз
+	// РџРµСЂРµРґ РЅР°РјРё Р±С‹Р» РѕРґРёРЅ СЂРµР№Р·
 	//
 	else if (GetSymbol("Calls") == 0 && GetSymbol("Raises") == 1)
 	{
@@ -506,7 +506,7 @@ void FirstAction()
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
-					// Выводим решение бота
+					// Р’С‹РІРѕРґРёРј СЂРµС€РµРЅРёРµ Р±РѕС‚Р°
 					colorRect[i] = 5;
 					colorText1 = 5;
 					strncpy(text1, "Raise", strlen("Raise") + 1);
@@ -537,7 +537,7 @@ void FirstAction()
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
-					// Выводим решение бота
+					// Р’С‹РІРѕРґРёРј СЂРµС€РµРЅРёРµ Р±РѕС‚Р°
 					colorRect[i] = 6;
 					colorText1 = 6;
 					strncpy(text1, "Call", strlen("Call") + 1);
@@ -550,7 +550,7 @@ void FirstAction()
 			{
 				if (!strcmp(a_hand169[i], hand169))
 				{
-					// Выводим решение бота
+					// Р’С‹РІРѕРґРёРј СЂРµС€РµРЅРёРµ Р±РѕС‚Р°
 					colorRect[i] = 7;
 					colorText1 = 7;
 					strncpy(text1, "Fold", strlen("Fold") + 1);
@@ -559,21 +559,21 @@ void FirstAction()
 			}
 		}
 
-		// Выводим позицию
+		// Р’С‹РІРѕРґРёРј РїРѕР·РёС†РёСЋ
 		strncpy(text2, "", strlen("") + 1);
 
 	}
 
-	// Неизвестная ситуация, очищаем экран
+	// РќРµРёР·РІРµСЃС‚РЅР°СЏ СЃРёС‚СѓР°С†РёСЏ, РѕС‡РёС‰Р°РµРј СЌРєСЂР°РЅ
 	else
 	{
 		cls = true;
 	}
 	
-	// Перерисовываем окно
+	// РџРµСЂРµСЂРёСЃРѕРІС‹РІР°РµРј РѕРєРЅРѕ
 	RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE);
 
-	// Освобождаем мьютекс
+	// РћСЃРІРѕР±РѕР¶РґР°РµРј РјСЊСЋС‚РµРєСЃ
 	mutex.unlock();
 }
 
