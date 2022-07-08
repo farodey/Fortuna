@@ -1,23 +1,27 @@
-Rank_2 = 0
-Rank_3 = 1
-Rank_4 = 2
-Rank_5 = 3
-Rank_6 = 4
-Rank_7 = 5
-Rank_8 = 6
-Rank_9 = 7
-Rank_TEN = 8
-Rank_JACK = 9
-Rank_QUEEN = 10
-Rank_KING = 11
-Rank_ACE = 12
-Rank_COUNT = 13
+RANK_2 = 0
+RANK_3 = 1
+RANK_4 = 2
+RANK_5 = 3
+RANK_6 = 4
+RANK_7 = 5
+RANK_8 = 6
+RANK_9 = 7
+RANK_TEN = 8
+RANK_JACK = 9
+RANK_QUEEN = 10
+RANK_KING = 11
+RANK_ACE = 12
+RANK_COUNT = 13
+RANK_FIRST = RANK_2
+RANK_LAST = RANK_ACE
 
-Suit_HEARTS = 0
-Suit_DIAMONDS = 1
-Suit_CLUBS = 2
-Suit_SPADES = 3
-Suit_COUNT = 4
+SUIT_HEARTS = 0
+SUIT_DIAMONDS = 1
+SUIT_CLUBS = 2
+SUIT_SPADES = 3
+SUIT_COUNT = 4
+SUIT_FIRST = SUIT_HEARTS
+SUIT_LAST = SUIT_SPADES
 
 
 cardMasksTable = [
@@ -76,7 +80,7 @@ cardMasksTable = [
 
 
 def make_card(rank, suit):
-    return (suit * Rank_COUNT) + rank
+    return (suit * RANK_COUNT) + rank
 
 
 def get_mask(index):
@@ -111,3 +115,12 @@ def hearts(mask):
     return (mask & 0b0000000000000000000000000000000000000000000000001111111111111000) >> 3
 
 
+def string_to_card(string):
+    rank_list = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    suit_list = ['h', 'd', 'c', 's']
+
+    for rank in range(RANK_FIRST, RANK_LAST + 1):
+        if rank_list[rank] == string[0]:
+            for suit in range(SUIT_FIRST, SUIT_LAST + 1):
+                if suit_list[suit] == string[1]:
+                    return make_card(rank, suit)

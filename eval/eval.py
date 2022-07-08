@@ -3,8 +3,7 @@ from eval.table import nBitsTable, straightTable, topFiveCardsTable, topCardTabl
 from eval.handval import *
 
 
-def evaluate(cards, n_cards):
-
+def eval_7_hand(cards, n_cards):
     ss = spades(cards)
     sc = clubs(cards)
     sd = diamonds(cards)
@@ -60,9 +59,19 @@ def evaluate(cards, n_cards):
             two_mask = ranks ^ (sc ^ sd ^ sh ^ ss)
             if two_mask:
                 t = ranks ^ two_mask
-                retval = hand_type_value(HAND_TYPE_TWOPAIR) + topFiveCardsTable[two_mask] &
-
-
-
-
+                retval = hand_type_value(HAND_TYPE_TWOPAIR) + topFiveCardsTable[two_mask] \
+                    & (TOP_CARD_MASK | SECOND_CARD_MASK) + third_card_value(topCardTable[t])
+                return retval
+            else:
+                # Тройка. В three_mask устанавливаем бит карты из которой состоит тройка
+                three_mask = ((sc & sd) | (sh & ss)) & ((sc & sh) | (sd & ss))
+                retval = hand_type_value(HAND_TYPE_TRIPS) + top_card_value(topCardTable[three_mask])
+                t = ranks ^ three_mask  # Выключаем ранг тройки в маске
+                second = topCardTable[t]
+                retval += second_card_value(second)
+                t ^= (1 << second)      # Выключаем ранг кикера
+                retval += third_card_value(topCardTable[t])
+                return retval
+        else:
+            pass
 
