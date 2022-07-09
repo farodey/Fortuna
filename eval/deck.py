@@ -100,19 +100,19 @@ def card_mask_set(mask, index):
 
 
 def spades(mask):
-    return (mask & 0b1111111111111000000000000000000000000000000000000000000000000000) >> 51
+    return mask & 0b0000000000000000000000000000000000000000000000000001111111111111
 
 
 def clubs(mask):
-    return (mask & 0b0000000000000000111111111111100000000000000000000000000000000000) >> 35
+    return (mask & 0b0000000000000000000000000000000000011111111111110000000000000000) >> 16
 
 
 def diamonds(mask):
-    return (mask & 0b0000000000000000000000000000000011111111111110000000000000000000) >> 19
+    return (mask & 0b0000000000000000000111111111111100000000000000000000000000000000) >> 32
 
 
 def hearts(mask):
-    return (mask & 0b0000000000000000000000000000000000000000000000001111111111111000) >> 3
+    return (mask & 0b0001111111111111000000000000000000000000000000000000000000000000) >> 48
 
 
 def string_to_card(string):
@@ -124,3 +124,13 @@ def string_to_card(string):
             for suit in range(SUIT_FIRST, SUIT_LAST + 1):
                 if suit_list[suit] == string[1]:
                     return make_card(rank, suit)
+
+
+def text_to_mask(str_hand):
+    ret_hand = 0
+    if str_hand and len(str_hand):
+        for i in range(0, len(str_hand), 2):
+            card_index = string_to_card(str_hand[i:i+2:1])
+            card_mask = get_mask(card_index)
+            ret_hand = card_mask_or(ret_hand, card_mask)
+    return ret_hand

@@ -3,7 +3,7 @@ from eval.table import nBitsTable, straightTable, topFiveCardsTable, topCardTabl
 from eval.handval import *
 
 
-def eval_7_hand(cards, n_cards):
+def eval_7_hand(cards, n_cards=7):
     ss = spades(cards)
     sc = clubs(cards)
     sd = diamonds(cards)
@@ -26,12 +26,12 @@ def eval_7_hand(cards, n_cards):
             else:
                 retval = hand_type_value(HAND_TYPE_FLUSH) + topFiveCardsTable[sc]
         elif nBitsTable[sd] >= 5:
-            if straightTable[sc]:
+            if straightTable[sd]:
                 return hand_type_value(HAND_TYPE_STFLUSH) + top_card_value(straightTable[sd])
             else:
                 retval = hand_type_value(HAND_TYPE_FLUSH) + topFiveCardsTable[sd]
         elif nBitsTable[sh] >= 5:
-            if straightTable[sc]:
+            if straightTable[sh]:
                 return hand_type_value(HAND_TYPE_STFLUSH) + top_card_value(straightTable[sh])
             else:
                 retval = hand_type_value(HAND_TYPE_FLUSH) + topFiveCardsTable[sh]
@@ -73,5 +73,9 @@ def eval_7_hand(cards, n_cards):
                 retval += third_card_value(topCardTable[t])
                 return retval
         else:
-            pass
-
+            four_mask = sh & sd & sc & ss
+            if four_mask:
+                tc = topCardTable[four_mask]
+                retval = hand_type_value(HAND_TYPE_QUADS) + top_card_value(tc) + \
+                    second_card_value(topCardTable[ranks ^ (1 << tc)])
+                return retval
