@@ -26,4 +26,5 @@ class HoldemCalculator:
         return (hand[1] in 'shdc') and (hand[3] in 'shdc') \
                and (hand[0] in '23456789TJQKA') and (hand[2] in '23456789TJQKA')
 
-
+    def calculate_mc(self, hands, board, dead, number_of_trials):
+        pass
