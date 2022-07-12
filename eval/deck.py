@@ -99,6 +99,10 @@ def card_mask_set(mask, index):
     return card_mask_or(mask, get_mask(index))
 
 
+def card_mask_any_set(mask1, mask2):
+    return (mask1 & mask2) != 0
+
+
 def spades(mask):
     return mask & 0b0000000000000000000000000000000000000000000000000001111111111111
 
@@ -134,3 +138,42 @@ def text_to_mask(str_hand):
             card_mask = get_mask(card_index)
             ret_hand = card_mask_or(ret_hand, card_mask)
     return ret_hand
+
+
+def char_to_rank(char):
+    if char == 'A':
+        return RANK_ACE
+    elif char == 'K':
+        return RANK_KING
+    elif char == 'Q':
+        return RANK_QUEEN
+    elif char == 'J':
+        return RANK_JACK
+    elif char == 'T':
+        return RANK_TEN
+    elif char == '9':
+        return RANK_9
+    elif char == '8':
+        return RANK_8
+    elif char == '7':
+        return RANK_7
+    elif char == '6':
+        return RANK_6
+    elif char == '5':
+        return RANK_5
+    elif char == '4':
+        return RANK_4
+    elif char == '3':
+        return RANK_3
+    elif char == '2':
+        return RANK_2
+    return -1
+
+
+def index_to_string(index):
+    rank_list = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    suit_list = ['h', 'd', 'c', 's']
+
+    i_suit = index // RANK_COUNT
+    i_rank = index % RANK_COUNT
+    return rank_list[i_rank] + suit_list[i_suit]
