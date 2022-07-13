@@ -44,13 +44,16 @@ class HoldemHandDistribution:
 
         # Пары типа AA или QQ+ или JJ-88
         if self.is_pair(hand_text):
-            for r in range(rank[0], ceil[0] + 1):
+            for rank0 in range(rank[0], ceil[0] + 1):
                 for suit1 in range(SUIT_FIRST, SUIT_LAST + 1):
                     for suit2 in range(suit1 + 1, SUIT_LAST + 1):
-                        card1 = get_mask(make_card(r, suit1))
-                        card2 = get_mask(make_card(r, suit2))
+                        card1 = get_mask(make_card(rank0, suit1))
+                        card2 = get_mask(make_card(rank0, suit2))
                         list_hand.append(card_mask_or(card1, card2))
-                        list_str_hand.append(index_to_string(make_card(r, suit1)) + make_card(r, suit2)) # В целях отладки
+
+                        # Для удобства отладки наполняем отдельный список строковым представлением рук
+                        list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
+                                             index_to_string(make_card(rank0, suit2)))
 
         # Одномастные типа A2s или T9s+ или QJs-65s
         elif self.is_suited(hand_text):
@@ -65,8 +68,9 @@ class HoldemHandDistribution:
                     card2 = get_mask(make_card(rank1, suit))
                     list_hand.append(card_mask_or(card1, card2))
 
-                    # Вцелях отладки наполняем отдельный список строковым представлением рук
-                    list_str_hand.append(index_to_string(make_card(rank0, suit)) + index_to_string(make_card(rank1, suit)))
+                    # Для удобства отладки наполняем отдельный список строковым представлением рук
+                    list_str_hand.append(index_to_string(make_card(rank0, suit)) +
+                                         index_to_string(make_card(rank1, suit)))
 
                 rank0 += rank0_increment
                 rank1 += 1
@@ -86,12 +90,35 @@ class HoldemHandDistribution:
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank1, suit2))
                         list_hand.append(card_mask_or(card1, card2))
+
+                        # Для удобства отладки наполняем отдельный список строковым представлением рук
+                        list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
+                                             index_to_string(make_card(rank1, suit2)))
+
                 rank0 += rank0_increment
                 rank1 += 1
 
-        # sdf
+        # Всё вместе, разномастные, одномастные
         else:
-            pass
+            rank0_increment = 1
+            if (is_plus or is_slice) and (rank[0] == RANK_ACE):
+                rank0_increment = 0
+            rank0 = rank[0]
+            rank1 = rank[1]
+            while rank0 <= ceil[0] and rank1 <= ceil[1]:
+                for suit1 in range(SUIT_FIRST, SUIT_LAST + 1):
+                    for suit2 in range(SUIT_FIRST, SUIT_LAST + 1):
+                        card1 = get_mask(make_card(rank0, suit1))
+                        card2 = get_mask(make_card(rank1, suit2))
+                        list_hand.append(card_mask_or(card1, card2))
+
+                        # Для удобства отладки наполняем отдельный список строковым представлением рук
+                        list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
+                                             index_to_string(make_card(rank1, suit2)))
+
+                rank0 += rank0_increment
+                rank1 += 1
+
         return list_str_hand
 
     # Пары типа AA или QQ+ или JJ-88
@@ -103,7 +130,7 @@ class HoldemHandDistribution:
         return len(hand) >= 3 and hand[2] == 's'
 
     def is_off_suited(self, hand):
-        return len(hand) >= 3 and hand[3] == 'o'
+        return len(hand) >= 3 and hand[2] == 'o'
 
     def is_specific_hand(self, hand):
         return (hand[1] in 'shdc') and (hand[3] in 'shdc') \

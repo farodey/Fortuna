@@ -10,11 +10,9 @@ def test():
     hand_list = calc.create_list_hand('AhKh|Td9s|QQ+,AQs+,AQo+|JJ-88|XxXx|XxXx|XxXx')
     hand_dist = HoldemHandDistribution('AJs+')
 
-    print(hand_dist.instantiate('AJs+'))
-
+    print(hand_dist.instantiate('65+'))
 
 
 if __name__ == '__main__':
     test()
-
 
