@@ -1,11 +1,11 @@
 from eval.deck import SUIT_FIRST, SUIT_LAST, char_to_rank, RANK_ACE, RANK_KING, get_mask, make_card, card_mask_or, \
-    index_to_string, text_to_mask
+    index_to_string, text_to_mask, card_mask_any_set
 from eval.enumerate import deck_enumerate_2_cards_d
 
 
 class HoldemHandRange:
 
-    def __init__(self, hand, dead_cards=0):
+    def __init__(self, hand, dead_cards):
 
         self.str_hand = hand
         self.dead_cards = dead_cards
@@ -16,14 +16,14 @@ class HoldemHandRange:
             if self.is_specific_hand(range0):
                 self.list_hand.append(text_to_mask(range0))
             else:
-                self.instantiate(range0)
+                self.instantiate(range0, dead_cards)
 
-    def instantiate(self, hand_text):
+    def instantiate(self, hand_text, dead_cards):
 
         list_str_hand = []
 
         if hand_text == 'XxXx':
-            self.instantiate_random()
+            self.instantiate_random(dead_cards)
             return
 
         is_plus = '+' in hand_text
@@ -53,7 +53,9 @@ class HoldemHandRange:
                     for suit2 in range(suit1 + 1, SUIT_LAST + 1):
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank0, suit2))
-                        self.list_hand.append(card_mask_or(card1, card2))
+                        hand = card_mask_or(card1, card2)
+                        if card_mask_any_set(dead_cards, hand):
+                            self.list_hand.append(hand)
 
                         # Для удобства отладки наполняем отдельный список строковым представлением рук
                         list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
@@ -70,7 +72,9 @@ class HoldemHandRange:
                 for suit in range(SUIT_FIRST, SUIT_LAST + 1):
                     card1 = get_mask(make_card(rank0, suit))
                     card2 = get_mask(make_card(rank1, suit))
-                    self.list_hand.append(card_mask_or(card1, card2))
+                    hand = card_mask_or(card1, card2)
+                    if card_mask_any_set(dead_cards, hand):
+                        self.list_hand.append(hand)
 
                     # Для удобства отладки наполняем отдельный список строковым представлением рук
                     list_str_hand.append(index_to_string(make_card(rank0, suit)) +
@@ -93,7 +97,9 @@ class HoldemHandRange:
                             continue
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank1, suit2))
-                        self.list_hand.append(card_mask_or(card1, card2))
+                        hand = card_mask_or(card1, card2)
+                        if card_mask_any_set(dead_cards, hand):
+                            self.list_hand.append(hand)
 
                         # Для удобства отладки наполняем отдельный список строковым представлением рук
                         list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
@@ -114,7 +120,9 @@ class HoldemHandRange:
                     for suit2 in range(SUIT_FIRST, SUIT_LAST + 1):
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank1, suit2))
-                        self.list_hand.append(card_mask_or(card1, card2))
+                        hand = card_mask_or(card1, card2)
+                        if card_mask_any_set(dead_cards, hand):
+                            self.list_hand.append(hand)
 
                         # Для удобства отладки наполняем отдельный список строковым представлением рук
                         list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
@@ -144,8 +152,8 @@ class HoldemHandRange:
         return (hand[1] in 'shdc') and (hand[3] in 'shdc') \
                and (hand[0] in '23456789TJQKA') and (hand[2] in '23456789TJQKA')
 
-    def instantiate_random(self):
-        deck_enumerate_2_cards_d(0, self.hand_append)
+    def instantiate_random(self, dead_cards):
+        deck_enumerate_2_cards_d(dead_cards, self.hand_append)
 
     def hand_append(self, cards_var):
         self.list_hand.append(cards_var)
