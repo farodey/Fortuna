@@ -126,17 +126,21 @@ class HoldemHandRange:
         return list_str_hand
 
     # Пары типа AA или QQ+ или JJ-88
-    def is_pair(self, hand):
+    @staticmethod
+    def is_pair(hand):
         return hand[0] == hand[1]
 
     # Одномастные типа A2s или T9s+ или QJs-65s
-    def is_suited(self, hand):
+    @staticmethod
+    def is_suited(hand):
         return len(hand) >= 3 and hand[2] == 's'
 
-    def is_off_suited(self, hand):
+    @staticmethod
+    def is_off_suited(hand):
         return len(hand) >= 3 and hand[2] == 'o'
 
-    def is_specific_hand(self, hand):
+    @staticmethod
+    def is_specific_hand(hand):
         return (hand[1] in 'shdc') and (hand[3] in 'shdc') \
                and (hand[0] in '23456789TJQKA') and (hand[2] in '23456789TJQKA')
 
@@ -145,5 +149,3 @@ class HoldemHandRange:
 
     def hand_append(self, cards_var):
         self.list_hand.append(cards_var)
-
-
