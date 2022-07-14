@@ -1,9 +1,11 @@
-from eval.deck import spades, clubs, diamonds, hearts
+from eval.deck import spades, clubs, diamonds, hearts, mask_to_text
 from eval.table import nBitsTable, straightTable, topFiveCardsTable, topCardTable
 from eval.handval import *
 
 
 def eval_7_hand(cards, n_cards=7):
+    # print(mask_to_text(cards))
+
     ss = spades(cards)
     sc = clubs(cards)
     sd = diamonds(cards)

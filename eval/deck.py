@@ -109,6 +109,14 @@ def card_mask_any_set(mask1, mask2):
     return (mask1 & mask2) != 0
 
 
+def num_cards(mask):
+    n_cards = 0
+    for i in range(N_CARDS):
+        if card_is_set(mask, i):
+            n_cards += 1
+    return n_cards
+
+
 def spades(mask):
     return mask & 0b0000000000000000000000000000000000000000000000000001111111111111
 
@@ -183,3 +191,20 @@ def index_to_string(index):
     i_suit = index // RANK_COUNT
     i_rank = index % RANK_COUNT
     return rank_list[i_rank] + suit_list[i_suit]
+
+
+def mask_to_text(mask):
+    ret_text = ''
+    list_index = mask_to_cards(mask)
+    for index in list_index:
+        ret_text = ret_text + index_to_string(index)
+    return ret_text
+
+
+def mask_to_cards(mask):
+    cards = []
+    for i in range(52):
+        if card_is_set(mask, i):
+            cards.append(i)
+    return cards
+

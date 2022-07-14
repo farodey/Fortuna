@@ -1,3 +1,5 @@
+import random
+
 from eval.deck import SUIT_FIRST, SUIT_LAST, char_to_rank, RANK_ACE, RANK_KING, get_mask, make_card, card_mask_or, \
     index_to_string, text_to_mask, card_mask_any_set
 from eval.enumerate import deck_enumerate_2_cards_d
@@ -11,10 +13,13 @@ class HoldemHandRange:
         self.dead_cards = dead_cards
         self.list_hand = []
 
+        self.current_hand = 0
+
         list_range = self.str_hand.split(',')
         for range0 in list_range:
             if self.is_specific_hand(range0):
-                self.list_hand.append(text_to_mask(range0))
+                self.current_hand = text_to_mask(range0)        # Сразу утанавливаем текущую руку для симуляции
+                self.list_hand.append(self.current_hand)
             else:
                 self.instantiate(range0, dead_cards)
 
@@ -157,3 +162,34 @@ class HoldemHandRange:
 
     def hand_append(self, cards_var):
         self.list_hand.append(cards_var)
+
+    def is_unary(self):
+        if len(self.list_hand) == 1:
+            return True
+        else:
+            return False
+
+    # Метод выбирает конкретную руку из диапазона
+    def choose(self, dead_cards):
+
+        collision_error = False
+
+        if self.is_unary():
+            return collision_error
+
+        # 10 попыток выбрать рук
+        for attempt in range(10):
+
+            # Генерим случайный индекс в списке рук
+            i_hand = random.randrange(0, len(self.list_hand), 1)
+            rand_hand = self.list_hand[i_hand]
+
+            if not card_mask_any_set(rand_hand, self.dead_cards):
+                self.current_hand = rand_hand
+                return collision_error
+        collision_error = True
+        return collision_error
+
+    def current(self):
+        return self.current_hand
+

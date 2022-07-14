@@ -1,5 +1,5 @@
 import random
-from eval.deck import card_is_set, card_mask_set, N_CARDS, get_mask, card_mask_any_set, card_mask_or
+from eval.deck import card_is_set, card_mask_set, N_CARDS, get_mask, card_mask_any_set, card_mask_or, mask_to_text
 
 
 #
@@ -11,15 +11,18 @@ from eval.deck import card_is_set, card_mask_set, N_CARDS, get_mask, card_mask_a
 # num_iter - число итераций
 # action - функция вызываемая на каждой итерации
 #
-def deck_montecarlo_n_cards_d(cards_var, dead_cards, num_cards, num_iter, action):
+def deck_montecarlo_n_cards_d(dead_cards, num_cards, num_iter, action):
     for i in range(num_iter):
+        cards_var = 0
+        used = dead_cards
         for j in range(num_cards):
             c = random.randrange(0, 52, 1)
-            while card_is_set(dead_cards, c):
+            while card_is_set(used, c):
                 c = random.randrange(0, 52, 1)
-            card_mask_set(cards_var, c)
-            card_mask_set(dead_cards, c)
-        action()
+            cards_var = card_mask_set(cards_var, c)
+            used = card_mask_set(used, c)
+        # print('deck_montecarlo_n_cards_d ' + 'cards_var=' + mask_to_text(cards_var) + ' dead_cards=' +  mask_to_text(dead_cards))
+        action(cards_var)
 
 
 def deck_enumerate_2_cards_d(dead_cards, action):
