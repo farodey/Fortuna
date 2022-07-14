@@ -106,6 +106,7 @@ def card_mask_set(mask, index):
 
 
 def card_mask_any_set(mask1, mask2):
+    """Возвращает True, если любая карта в масках совпадает"""
     return (mask1 & mask2) != 0
 
 

@@ -4,7 +4,7 @@ from eval.handval import *
 
 
 def eval_7_hand(cards, n_cards=7):
-    # print(mask_to_text(cards))
+    # print('оценка руки: ' + mask_to_text(cards))
 
     ss = spades(cards)
     sc = clubs(cards)

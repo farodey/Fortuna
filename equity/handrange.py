@@ -1,7 +1,7 @@
 import random
 
 from eval.deck import SUIT_FIRST, SUIT_LAST, char_to_rank, RANK_ACE, RANK_KING, get_mask, make_card, card_mask_or, \
-    index_to_string, text_to_mask, card_mask_any_set
+    index_to_string, text_to_mask, card_mask_any_set, mask_to_text
 from eval.enumerate import deck_enumerate_2_cards_d
 
 
@@ -59,7 +59,7 @@ class HoldemHandRange:
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank0, suit2))
                         hand = card_mask_or(card1, card2)
-                        if card_mask_any_set(dead_cards, hand):
+                        if not card_mask_any_set(dead_cards, hand):
                             self.list_hand.append(hand)
 
                         # Для удобства отладки наполняем отдельный список строковым представлением рук

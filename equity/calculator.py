@@ -19,6 +19,7 @@ class HoldemCalculator:
 
         self.wins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.ties = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.tied_player_indexes = []
 
     def calculate_mc(self, hands, board, dead, number_of_trials):
         self.precalculate(hands, board, dead, number_of_trials)
@@ -42,19 +43,24 @@ class HoldemCalculator:
 
         static_player_cards = 0
 
+        # Сначала найдем все конкретные руки, добавим их в список и зарезервируем
+        # место в списке для диапазонов. Это нужно для соблюдения последоватедьлности рук в списке
         for hand in self.list_hands:
             if HoldemHandRange.is_specific_hand(hand):
                 cur_range = HoldemHandRange(hand, self.dead_mask)
                 self.list_range.append(cur_range)
                 cur_range.choose(self.dead_mask)
                 static_player_cards = card_mask_or(static_player_cards, cur_range.current_hand)
+            else:
+                # Зарезервируем место в списке
+                self.list_range.append('reserved')
 
         self.dead_mask = card_mask_or(self.dead_mask, static_player_cards)
 
-        for hand in self.list_hands:
-            if not HoldemHandRange.is_specific_hand(hand):
-                cur_range = HoldemHandRange(hand, self.dead_mask)
-                self.list_range.append(cur_range)
+        for i_hand in range(len(self.list_hands)):
+            if not HoldemHandRange.is_specific_hand(self.list_hands[i_hand]):
+                cur_range = HoldemHandRange(self.list_hands[i_hand], self.dead_mask)
+                self.list_range[i_hand] = cur_range
 
     def calculate_monte_carlo(self):
 
@@ -75,10 +81,9 @@ class HoldemCalculator:
 
     def eval_one_trial(self, bord_fragment):
         self.actual_trials += 1
-        index_player = -1
+        win_index_player = -1
         is_tie = False
         num_ties = 0
-        cur_handval = 0
         max_handval = 0
 
         board_mask = card_mask_or(bord_fragment, self.board_mask)
@@ -89,22 +94,26 @@ class HoldemCalculator:
             if cur_handval > max_handval:
                 max_handval = cur_handval
                 is_tie = False
-                index_player = player
+                win_index_player = player
                 num_ties = 0
+                self.tied_player_indexes.clear()
+
+                # Отладка
+                # if player == 0:
+                #     print(mask_to_text(temp_hand))
+
             elif cur_handval == max_handval:
                 if num_ties == 0:
-                    pass
+                    self.tied_player_indexes.append(win_index_player)
+                    self.tied_player_indexes.append(player)
                 else:
-                    pass
+                    self.tied_player_indexes[num_ties + 1] = player
                 is_tie = True
                 num_ties += 1
 
             temp_hand = 0
         if not is_tie:
-            self.wins[index_player] += 1
-
-
-
-
-
-
+            self.wins[win_index_player] += 1
+        else:
+            for i in self.tied_player_indexes:
+                self.ties[i] += 1
