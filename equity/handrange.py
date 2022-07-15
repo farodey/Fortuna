@@ -78,7 +78,7 @@ class HoldemHandRange:
                     card1 = get_mask(make_card(rank0, suit))
                     card2 = get_mask(make_card(rank1, suit))
                     hand = card_mask_or(card1, card2)
-                    if card_mask_any_set(dead_cards, hand):
+                    if not card_mask_any_set(dead_cards, hand):
                         self.list_hand.append(hand)
 
                     # Для удобства отладки наполняем отдельный список строковым представлением рук
@@ -103,7 +103,7 @@ class HoldemHandRange:
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank1, suit2))
                         hand = card_mask_or(card1, card2)
-                        if card_mask_any_set(dead_cards, hand):
+                        if not card_mask_any_set(dead_cards, hand):
                             self.list_hand.append(hand)
 
                         # Для удобства отладки наполняем отдельный список строковым представлением рук
@@ -126,12 +126,11 @@ class HoldemHandRange:
                         card1 = get_mask(make_card(rank0, suit1))
                         card2 = get_mask(make_card(rank1, suit2))
                         hand = card_mask_or(card1, card2)
-                        if card_mask_any_set(dead_cards, hand):
+                        if not card_mask_any_set(dead_cards, hand):
                             self.list_hand.append(hand)
 
-                        # Для удобства отладки наполняем отдельный список строковым представлением рук
-                        list_str_hand.append(index_to_string(make_card(rank0, suit1)) +
-                                             index_to_string(make_card(rank1, suit2)))
+                            # Для удобства отладки наполняем отдельный список строковым представлением рук
+                            list_str_hand.append(index_to_string(make_card(rank0, suit1)) + index_to_string(make_card(rank1, suit2)))
 
                 rank0 += rank0_increment
                 rank1 += 1

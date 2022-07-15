@@ -90,6 +90,9 @@ def make_card(rank, suit):
 
 
 def get_mask(index):
+    """Получает маску карты по индексу\n
+    Вход: индекс\n
+    Выход: маска"""
     return cardMasksTable[index]
 
 

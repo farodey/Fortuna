@@ -1,3 +1,5 @@
+from prettytable import PrettyTable
+
 from equity.handrange import HoldemHandRange
 from eval.deck import text_to_mask, card_mask_or, num_cards, mask_to_text
 from eval.enumerate import deck_montecarlo_n_cards_d
@@ -15,15 +17,15 @@ class HoldemCalculator:
         self.actual_trials = 0          # Число фактически выполненных итерации симуляции
         self.collisions = 0
         self.number_of_board_cards = 0
-        self.player_count = 0
 
-        self.wins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.ties = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.wins = []
+        self.ties = []
         self.tied_player_indexes = []
 
     def calculate_mc(self, hands, board, dead, number_of_trials):
         self.precalculate(hands, board, dead, number_of_trials)
         self.calculate_monte_carlo()
+        self.post_calculate()
 
     def precalculate(self, hands, board, dead, number_of_trials):
         self.store(hands, board, dead, number_of_trials)
@@ -64,6 +66,11 @@ class HoldemCalculator:
 
     def calculate_monte_carlo(self):
 
+        # Инициализируем счетчики
+        for pl in range(len(self.list_range)):
+            self.wins.append(0)
+            self.ties.append(0)
+
         # Цикл симуляции
         while self.actual_trials < self.indicated_trials:
             used_cards_this_trial = self.dead_mask
@@ -80,6 +87,8 @@ class HoldemCalculator:
             deck_montecarlo_n_cards_d(used_cards_this_trial, 5 - self.number_of_board_cards, 1, self.eval_one_trial)
 
     def eval_one_trial(self, bord_fragment):
+        """Выполняет одно испытание, оценивает руки, выявляет победителя, обновляет счетчики симуляции\n
+        Вход: маска случайно выбранной оставшейся части доски"""
         self.actual_trials += 1
         win_index_player = -1
         is_tie = False
@@ -98,10 +107,7 @@ class HoldemCalculator:
                 num_ties = 0
                 self.tied_player_indexes.clear()
 
-                # Отладка
-                # if player == 0:
-                #     print(mask_to_text(temp_hand))
-
+            # Обработка ничьей
             elif cur_handval == max_handval:
                 if num_ties == 0:
                     self.tied_player_indexes.append(win_index_player)
@@ -111,9 +117,16 @@ class HoldemCalculator:
                 is_tie = True
                 num_ties += 1
 
-            temp_hand = 0
+        # Обновляем счетчики результатов
         if not is_tie:
             self.wins[win_index_player] += 1
         else:
             for i in self.tied_player_indexes:
                 self.ties[i] += 1
+
+    def post_calculate(self):
+        table = PrettyTable(['Игрок', 'Выигрыш', 'Ничья'])
+        for i in range(len(self.wins)):
+            table.add_row([f'Player {i}', str(round((self.wins[i] / self.indicated_trials) * 100, 2)) + '%',
+                           str(round((self.ties[i] / self.indicated_trials) * 100, 2)) + '%'])
+        print(table)
