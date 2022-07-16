@@ -44,9 +44,11 @@ def screen_window(name):
     mfcDC.DeleteDC()
     win32gui.ReleaseDC(hwnd, hwndDC)
 
-    if result == 1:
-        # PrintWindow Succeeded
-        im.save("test.png")
+    # if result == 1:
+    #     # PrintWindow Succeeded
+    #     im.save("test.png")
+
+    return im
 
 
 def get_list_name_window():
