@@ -1,12 +1,14 @@
 import sys
 
 from PIL.ImageQt import ImageQt, QPixmap, QImage
-from PyQt6.QtCore import QSize, Qt, QObject, pyqtSignal
+from PyQt6 import uic
+from PyQt6.QtCore import QSize, QObject, pyqtSignal
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QListWidget, QHBoxLayout, \
     QLabel
 
 from scrape import get_list_name_window, screen_window
 
+import design
 
 window = 0
 
@@ -75,6 +77,8 @@ class SelectWindow(QMainWindow):
 
         # Делаем скрин окна
         image = screen_window(window_name)
+
+        # Преобразуем полученное изображение в формат QT
         window.q_image = ImageQt(image)
 
         # Закрываем это окно
@@ -93,7 +97,7 @@ class MainWindow(QMainWindow):
 
         # Название и размер окна
         self.setWindowTitle("Fortuna")
-        self.setFixedSize(QSize(400, 300))
+        self.setFixedSize(QSize(800, 700))
 
         self.button = QPushButton('Захватить окно')
         self.layout = QVBoxLayout()
@@ -117,16 +121,41 @@ class MainWindow(QMainWindow):
 
     def paint_screen(self):
 
+        # Получем изображение
         self.pixmap = QPixmap(QImage(self.q_image))
 
+        # Подгоняем размер окна под размер изображения
         size = self.pixmap.size()
+        size.setHeight(size.height() + 50)
+        size.setWidth(size.width() + 50)
 
         label = QLabel()
         label.setPixmap(self.pixmap)
 
-        window.setFixedSize(QSize(300, 300))
+        # Удаляем кнопку
+        self.layout.removeWidget(self.button)
+        self.button.deleteLater()
+        self.button = None
 
+        # Меняем размер окна
+        window.setFixedSize(size)
+
+        # Устанавливаем изображение
         self.layout.addWidget(label)
+
+        # Создаем окно редактирования карты стола
+        self.etmw = EditTableMapWindow()
+        self.etmw.show()
+
+
+# Окно редактирования карты стола
+class EditTableMapWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = design.Ui_MainWindow()
+        self.ui.setupUi(self)
+
+
 
 
 if __name__ == '__main__':

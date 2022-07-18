@@ -28,8 +28,7 @@ def screen_window(name):
     # result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 1)
     # Если не работает, то можно использовать следующий код
     # windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 3)
-    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 0)
-    print(result)
+    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 3)
 
     bmpinfo = saveBitMap.GetInfo()
     bmpstr = saveBitMap.GetBitmapBits(True)
@@ -44,9 +43,9 @@ def screen_window(name):
     mfcDC.DeleteDC()
     win32gui.ReleaseDC(hwnd, hwndDC)
 
-    # if result == 1:
-    #     # PrintWindow Succeeded
-    #     im.save("test.png")
+    if result == 1:
+        # PrintWindow Succeeded
+        im.save("C:\\Users\\farodey\\Desktop\\screen.png")
 
     return im
 
