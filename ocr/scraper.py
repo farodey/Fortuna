@@ -103,7 +103,7 @@ class Scraper:
         # вырезаем картинку
         roi_image = self.open_cv_image[yx_card[0]:yx_card[0] + y, yx_card[1]:yx_card[1] + x]
 
-        # уменьшаем разрешение  до 8х8
+        # уменьшаем разрешение до 8х8
         resize_image = cv2.resize(roi_image, (8, 8))
 
         # переводим в градации серого (убираем цвет)

@@ -1,3 +1,5 @@
+import cv2
+
 from ocr.scraper import Scraper
 
 
@@ -121,3 +123,6 @@ class PokerStars(Scraper):
                      9908455740165383619: '6c'}
         print(self.hash_image(dict_yx_card[ncard], 38, 15))
         return dict_hash[self.hash_image(dict_yx_card[ncard], 38, 15)]
+
+    def fold(self):
+        return False
