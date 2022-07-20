@@ -1,11 +1,13 @@
 import sys
+import threading
+from time import sleep
 
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import pyqtSignal, QObject
 from PyQt6.QtWidgets import QFileDialog
 
 from gui import main_window, table_list_window
-from ocr.scrape import get_list_name_window
+from ocr.scraper import get_list_name_window, screen_window
 
 window = 0
 
@@ -40,7 +42,15 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.tlw.show()
 
     def thread_calculate(self, window_name):
-        print(window_name)
+        thread = threading.Thread(target=thread_calculate, args=(window_name, ))
+        thread.start()
+
+
+def thread_calculate(window_name):
+
+    while True:
+        screen_window(window_name)
+        sleep(1)
 
 
 class TableListWindow(QtWidgets.QMainWindow, table_list_window.Ui_MainWindow):
